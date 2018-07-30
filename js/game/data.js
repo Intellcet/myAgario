@@ -6,19 +6,19 @@
     this.color = (color) ? color : "rgb(" + Math.floor(Math.random() * 256) +", " + Math.floor(Math.random() * 256) + ", " + Math.floor(Math.random() * 256) + ")";
 
 
-    this.center = function () {
+    this.center = () => {
         return { x: this.x, y: this.y };
     };
 
-    this.getMass = function () {
-        return this.mass
+    this.getMass = () => {
+        return this.mass;
     };
 
-    this.getColor = function () {
+    this.getColor = () => {
         return this.color;
     };
 
-    this.getRadius = function () {
+    this.getRadius = () => {
         return Math.sqrt(this.mass / Math.PI);
     };
 }
@@ -27,40 +27,37 @@ function Ball(_x, _y, _mass, _color, _name) {
 
     Circle.call(this, _x, _y, _mass, _color);
 
-    var dx = 0;
-    var dy = 0;
+    let dx = 0;
+    let dy = 0;
 
     this.name = _name;
 
-    this.getName = function () {
+    this.getName = () => {
         return this.name
     };
 
-    this.getDirection = function () {
-        return { dx: dx, dy: dy };
+    this.getDirection = () => {
+        return { dx, dy };
     };
 
-    this.setDirection = function (_dx, _dy) {
+    this.setDirection = (_dx, _dy) => {
         dx = _dx;
         dy = _dy;
-        var d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+        const d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
         if(d > 1) {
             dx = dx / d;
             dy = dy / d;
         }
-        return {
-            dx: dx,
-            dy: dy
-        };
+        return { dx, dy };
     };
 	
 
-    this.getSpeed = function () {
+    this.getSpeed = () => {
         return 1 / (10 * Math.pow(this.mass, 1 / 7));
     };
 
-    this.move = function (frame, screen) {
-        var speed = this.getSpeed();
+    this.move = (frame, screen) => {
+        const speed = this.getSpeed();
         if(this.x <= screen.left + screen.width && this.x >= screen.left) {
             this.x += speed * this.getDirection().dx;
             frame.left += speed * this.getDirection().dx;
@@ -105,70 +102,72 @@ function Ball(_x, _y, _mass, _color, _name) {
         }
     };
 
-    this.eat = function (_mass) {
+    this.eat = _mass => {
         this.mass += _mass;
     };
 
-    this.getRast = function (player, ball) {
-        var x = player.center().x - ball.center().x;
-        var y = player.center().y - ball.center().y;
+    this.getRast = (player, ball) => {
+        const x = player.center().x - ball.center().x;
+        const y = player.center().y - ball.center().y;
         return Math.sqrt(x * x + y * y);
     };
 
-    this.moveAI = function () {// для ИИ
-        var speed = this.getSpeed();
+    this.moveAI = () => {// для ИИ
+        const speed = this.getSpeed();
         this.x += speed * this.getDirection().dx;
         this.y += speed * this.getDirection().dy;
     };
-	
-
-
 }
 
 function Food(_x, _y, _mass) {
 
     Circle.call(this, _x, _y, _mass);
 
-    this.getRast = function (eda, ball) {
-        var x = eda.center().x - ball.center().x;
-        var y = eda.center().y - ball.center().y;
+    this.getRast = (food, ball) => {
+        const x = food.center().x - ball.center().x;
+        const y = food.center().y - ball.center().y;
         return Math.sqrt(x * x + y * y);
     };
     this.roll = Math.floor(Math.random() * 5 + 1);
 }
 
 function Field(width, height, left, bottom) {
-
     this.width = width;
     this.height = height;
     this.left = left;
     this.bottom = bottom;
-
 }
 
 
 function Data(options) {
 
-    var Height = options.height;
-    Width = options.width;
+    const Height = options.height;
+    const Width = options.width;
 
-    var screen = new Field(100, 100, -50, -50);
-    var frame = new Field(10, 10, -5, -5);
+    const screen = new Field(100, 100, -50, -50);
+    const frame = new Field(10, 10, -5, -5);
 
-    var food = []; //массив со всей едой
-    var balls = [];//массив всех шаров
+    const food = []; //массив со всей едой
+    const balls = [];//массив всех шаров
 
-    var score = 0;
+    let score = 0;
+    const FOOD_COUNT = 2500;
+    const BALLS_COUNT = 7;
 
-    var nicks = new GenerateNicks();
+    const nicks = new GenerateNicks();
+    let player = null;
 
-    var player = new Ball(
+    function createNewPlayer() {
+        return new Ball(
             (frame.width + frame.left + frame.left) / 2,
             (frame.height + frame.bottom + frame.bottom) / 2,
             0.1,
             undefined,
-            '213'
+            nicks.genNick()
         );
+    }
+
+    player = createNewPlayer();
 
     //From local to ekran
     function getXs(x) {
@@ -189,7 +188,8 @@ function Data(options) {
     }
 
     function pushFood() {//заполняем еду
-        for (var i = 0; i < 2500; i++) {
+        food.splice(0, food.length);
+        for (let i = 0; i < FOOD_COUNT; i++) {
             food.push(new Food(
                 Math.random() * screen.width + screen.left,
                 Math.random() * screen.height + screen.bottom,
@@ -199,52 +199,65 @@ function Data(options) {
     }
 
     function pushBalls() {//заполняем шары
-        for (var i = 0; i < 7; i++){
+        balls.splice(0, balls.length);
+        for (let i = 0; i < BALLS_COUNT; i++){
             balls.push(new Ball(
 				Math.random() * screen.width + screen.left,
                 Math.random() * screen.height + screen.bottom,
 				0.1,
-				"rgb(" + Math.round(Math.random() * 255) + ", " + Math.round(Math.random() * 255) + ", " + Math.round(Math.random() * 255) + ")",
+				undefined,
                 nicks.genNick()
 			));
         }
     }
 
-    function rollFood(eda) {
-        if (eda.roll === 1) {   eda.img = { x: 20,  y: 77,  xs: 104, ys: 109 };   }
-        if (eda.roll === 2) {   eda.img = { x: 156, y: 76,  xs: 85,  ys: 119 };   }
-        if (eda.roll === 3) {   eda.img = { x: 260, y: 75,  xs: 129, ys: 117 };   }
-        if (eda.roll === 4) {   eda.img = { x: 24,  y: 206, xs: 97,  ys: 117 };   }
-        if (eda.roll === 5) {   eda.img = { x: 137, y: 205, xs: 123, ys: 120 };   }
+    function rollFood(food) {
+        switch (food.roll) {
+            case 1:
+                food.img = { x: 20,  y: 77,  xs: 104, ys: 109 };
+                break;
+            case 2:
+                food.img = { x: 156, y: 76,  xs: 85,  ys: 119 };
+                break;
+            case 3:
+                food.img = { x: 260, y: 75,  xs: 129, ys: 117 };
+                break;
+            case 4:
+                food.img = { x: 24,  y: 206, xs: 97,  ys: 117 };
+                break;
+            case 5:
+                food.img = { x: 137, y: 205, xs: 123, ys: 120 };
+                break;
+        }
     }
 
     function printFood(cb) {//рисуем еду
-        var fw_fl = frame.width + frame.left;
-        var fh_fb = frame.height + frame.bottom;
-        for (var i = 0; i < food.length; i++) {
-            rollFood(food[i]);
-            var center = food[i].center();
-            var radius = food[i].getRadius();
+        const fw_fl = frame.width + frame.left;
+        const fh_fb = frame.height + frame.bottom;
+        for (let _food of food) {
+            rollFood(_food);
+            const center = _food.center();
+            const radius = _food.getRadius();
             if(center.x + radius > frame.left &&
                center.x - radius < fw_fl &&
                center.y + radius > frame.bottom &&
                center.y - radius < fh_fb) {
-                cb({ x: getXs(center.x), y: getYs(center.y) }, radius, food[i].getColor(), null, food[i].img);
+                cb({ x: getXs(center.x), y: getYs(center.y) }, radius, _food.getColor(), null, _food.img);
             }
         }
     }
 
     function printBalls(cb) {//рисуем шары
-        var fw_fl = frame.width + frame.left;
-        var fh_fb = frame.height + frame.bottom;
-        for(var i = 0; i < balls.length; i++) {
-            var center = balls[i].center();
-            var radius = balls[i].getRadius();
+        const fw_fl = frame.width + frame.left;
+        const fh_fb = frame.height + frame.bottom;
+        for(let ball of balls) {
+            const center = ball.center();
+            const radius = ball.getRadius();
             if(center.x + radius > frame.left &&
                center.x - radius < fw_fl &&
                center.y + radius > frame.bottom &&
                center.y - radius < fh_fb) {
-                cb({ x: getXs(center.x), y: getYs(center.y) }, radius, balls[i].getColor(), balls[i].getName());
+                cb({ x: getXs(center.x), y: getYs(center.y) }, radius, ball.getColor(), ball.getName());
             }
         }
         if(player) {
@@ -252,47 +265,46 @@ function Data(options) {
         }
     }
 
-    function zoomFrame() { //отдаляет экран(полная хрень... ошибка в изменении длины/ширины/левого нижнего угла)
-        if(frame.width / player.getRadius() < 27 && frame.height / player.getRadius() < 27) {
-            frame.width += 0.05;
-            frame.height += 0.05;
-            frame.bottom -= 0.025;
-            frame.left -= 0.025;
-            for (var i = 0; i < food.length; i++) {
-                food[i].mass = 10 / (frame.width * frame.height);
-            }
-        }
-    }
+    // function zoomFrame() { //отдаляет экран(полная хрень... ошибка в изменении длины/ширины/левого нижнего угла)
+    //     if(frame.width / player.getRadius() < 27 && frame.height / player.getRadius() < 27) {
+    //         frame.width += 0.05;
+    //         frame.height += 0.05;
+    //         frame.bottom -= 0.025;
+    //         frame.left -= 0.025;
+    //         for (let _food of food) {
+    //             _food.mass = 10 / (frame.width * frame.height);
+    //         }
+    //     }
+    // }
 
     function eat() {//едим
-        var radius = player.getRadius();
-        var radiusFood = food[0].getRadius();
-        for(var j = 0; j < food.length; j++) {
-            if(food[j].getRast(food[j], player) < radius) {
-                var mass = food[j].getMass() / player.getMass() * 0.05;
+        const radius = player.getRadius();
+        for(let _food of food) {
+            if(_food.getRast(_food, player) < radius) {
+                const mass = _food.getMass() / player.getMass() * 0.05;
 	            player.eat(mass);
 	            score++;
-				food.splice(j, 1);
-				food.push(new Food(
-					Math.random() * screen.width + screen.left,
-                    Math.random() * screen.width + screen.bottom,
-					10 / (frame.width * frame.height)
-				));
+                food.splice(food.indexOf(_food), 1);
+                food.push(new Food(
+                    Math.random() * screen.width + screen.left,
+                    Math.random() * screen.height + screen.bottom,
+                    10 / (frame.width * frame.height)
+                ));
 			}
 	    }
-	    for (var i = 0; i < balls.length; i++) {
-	        if(balls[i].getRast(balls[i], player) < radius && radius > balls[i].getRadius()) {
-	            var mass = balls[i].getMass() / player.getMass() * 0.05;
+	    for (let ball of balls) {
+	        if(ball.getRast(ball, player) < radius && radius > ball.getRadius()) {
+	            const mass = ball.getMass() / player.getMass() * 0.05;
 	            player.eat(mass);
 	            score++;
-	            balls.splice(i, 1);
-	            balls.push(new Ball(
-					Math.random() * screen.width + screen.left,
-					Math.random() * screen.height + screen.bottom,
-					0.1,
-                    "rgb(" + Math.round(Math.random() * 255) + ", " + Math.round(Math.random() * 255) + ", " + Math.round(Math.random() * 255) + ")",
+                balls.splice(balls.indexOf(ball), 1);
+                balls.push(new Ball(
+                    Math.random() * screen.width + screen.left,
+                    Math.random() * screen.height + screen.bottom,
+                    0.1,
+                    undefined,
                     nicks.genNick()
-				));
+                ));
 	        }
 	    }
 	    //zoomFrame();
@@ -303,38 +315,38 @@ function Data(options) {
 	}
 	
 	function setMoveAI(food, ball) {//устанавливаем направление движения для ИИ
-		var dx = food.center().x - ball.center().x;
-		var dy = food.center().y - ball.center().y;
+		const dx = food.center().x - ball.center().x;
+		const dy = food.center().y - ball.center().y;
 		ball.getDirection().dx = ball.setDirection(dx, dy).dx;
 		ball.getDirection().dy = ball.setDirection(dx, dy).dy;
 	}
 
-	function eatAI(min, ball) {
-	    var radiusBall = ball.getRadius();
-	    var minRast = min.getRast(min, ball);
-	    for(var i = 0; i < balls.length; i++) {
-	        if(min === balls[i]) {
+	function eatAI(min,_ball) {
+	    const radiusBall = _ball.getRadius();
+	    const minRast = min.getRast(min, _ball);
+	    for(let ball of balls) {
+	        if(min === ball) {
 	            if(minRast < radiusBall) {
-	                var mass = min.getMass / ball.getMass() * 0.05;
+	                const mass = min.getMass / _ball.getMass() * 0.05;
 	                ball.eat(mass);
-	                balls.splice(i, 1);
+	                balls.splice(balls.indexOf(ball), 1);
 	                balls.push(new Ball(
                         Math.random() * screen.width + screen.left,
                         Math.random() * screen.height + screen.bottom,
                         0.1,
-                        "rgb(" + Math.round(Math.random() * 255) + ", " + Math.round(Math.random() * 255) + ", " + Math.round(Math.random() * 255) + ")",
+                        undefined,
                         nicks.genNick()
                     ));
 	            }
 	            break;
 	        }
 	    }
-	    for (var i = 0; i < food.length; i++) {
-	        if (min === food[i]) {
+	    for (let _food of food) {
+	        if (min === _food) {
 	            if (minRast < radiusBall) {
-	                var mass = min.getMass() / ball.getMass() * 0.05;
-	                ball.eat(mass);
-	                food.splice(i, 1);
+	                const mass = min.getMass() / _ball.getMass() * 0.05;
+	                _ball.eat(mass);
+	                food.splice(food.indexOf(_food), 1);
 	                food.push(new Food(
                         Math.random() * screen.width + screen.left,
                         Math.random() * screen.height + screen.bottom,
@@ -346,27 +358,26 @@ function Data(options) {
 	    }
 	    if(min === player) {
 	        if(minRast < radiusBall) {
-	            var mass = player.getMass() / ball.getMass() * 0.05;
-	            ball.eat(mass);
+	            const mass = player.getMass() / _ball.getMass() * 0.05;
+	            _ball.eat(mass);
 	            player = null;
 	        }
 	    }
     }
 
 	function moveAI() {//передвигаем ИИ
-	    for(var i = 0; i < balls.length; i++) {
-	        var ball = balls[i];
-	        var min = food[0];
-	        var minRast = min.getRast(min, ball);
-	        for(var j = 1; j < food.length; j++) {
-	            if(food[j].getRast(food[j], ball) < minRast) {
-	                min = food[j];
+	    for(let ball of balls) {
+	        let min = food[0];
+	        let minRast = min.getRast(min, ball);
+	        for(let _food of food) {
+	            if(_food.getRast(_food, ball) < minRast) {
+	                min = _food;
 	                minRast = min.getRast(min, ball);
 	            }
 	        }
-	        for(var s = 0; s < balls.length; s++) {
-	            if(balls[s].getRast(balls[s], ball) < minRast && balls[s] != ball) {
-	                min = balls[s];
+	        for(let _ball of balls) {
+	            if(_ball.getRast(_ball, ball) < minRast && _ball !== ball) {
+	                min = _ball;
 	                minRast = min.getRast(min, ball);
                 }
 	        }
@@ -386,53 +397,37 @@ function Data(options) {
         pushBalls();
 	}
 
-    this.changeColor = function (color) {
-        player.color = color;
-    };
+	this.resetScore = () => { score = 0; };
 
-    this.changeNickname = function (name) {
-        player.name = name;
-    };
+    this.changeColor = color => { player.color = color; };
 
-    this.direction = function (x, y) {//устанавливаем направление движения игрока
+    this.changeNickname = name => { player.name = name; };
+
+    this.direction = (x, y) => {//устанавливаем направление движения игрока
         if (player) {
-            var dx = getX(x) - player.center().x;
-            var dy = getY(y) - player.center().y;
+            const dx = getX(x) - player.center().x;
+            const dy = getY(y) - player.center().y;
             player.setDirection(dx, dy);
         }
-        
     };
 
-    this.getScore = function () {
-        return score;
-    };
+    this.getScore = () => { return score; };
 
-    this.refresh = function () {
+    this.refresh = () => {
         if(player) {
             move();
             eat();
             moveAI();
             return true;
         }
+        init();
+        player = createNewPlayer();
         return false;
     };
 
-    this.render = function (cb) {
+    this.render = cb => {
         printFood(cb);
         printBalls(cb);
-    };
-
-    this.getFrame = function () {
-        return frame;
-    };
-    this.getFood = function () {
-        return food;
-    };
-    this.getBalls = function () {
-        return balls;
-    };
-    this.getPlayer = function () {
-        return player;
     };
 
     init();

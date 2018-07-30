@@ -1,30 +1,44 @@
-﻿window.onload = function () {
+﻿$(() => {
+    const canvasBlock = $('.canvasBlock');
 
-    var width = (window.innerWidth > window.innerHeight) ? window.innerHeight : window.innerWidth;
-    var height = (window.innerWidth < window.innerHeight) ? window.innerWidth : window.innerHeight;
+    let width = (canvasBlock.width() > canvasBlock.height()) ? canvasBlock.height() : canvasBlock.width();
+    let height = (canvasBlock.width() < canvasBlock.height()) ? canvasBlock.width() : canvasBlock.height();
 
-    var manager = new Manager(width, height);
+    let game;
 
-    var ui = new UI({
-        start: function () {
+    const manager = new Manager(width, height);
+
+    const ui = new UI({
+        start:() => {
             startGame();
         },
-        changeNick: function (nickname) {
-            manager.changeNick(nickname)
+        changeNick: nickname => {
+            manager.changeNick(nickname);
         },
-        changeColor: function (color) {
-            manager.changeColor(color)
+        changeColor: color => {
+            manager.changeColor(color);
+        },
+        playAgain: () => {
+            startGame();
         }
     });
 
     function startGame() {
-        var game = setInterval(function () {
-            if(manager.play()) {
-                clearInterval(game);
-                ui.gameOver();
-            }
-            ui.getScore(manager.getScore());
-        }, 17);
+        if (!game) {
+            manager.resetScore();
+            game = setInterval(() => {
+                if(manager.play()) {
+                    clearInterval(game);
+                    ui.gameOver();
+                    game = null;
+                }
+                ui.getScore(manager.getScore());
+            }, 17);
+        }
     }
+});
 
-};
+
+
+
+

@@ -1,27 +1,27 @@
 ﻿function Manager(_width, _height) {
 
-    var width  = _width  || 600;
-    var height = _height || 600;
+    let width  = _width  || 600;
+    let height = _height || 600;
     
-    var img = new Image();
+    const img = new Image();
     img.src = "img/223.png";
+
+    const FILL_RECT_COLOR = '#00CED1';
     
-    var data  = new Data ({ width: width, height: height });
-    var graph = new Graph({ width: width, height: height, data: data });
+    const data  = new Data ({ width, height });
+    const graph = new Graph({ width, height, data });
+
     new Input({
         canvas: graph.getCanvas(),
-        move: function (dx, dy) {
-            data.direction(dx, dy);
-        }
+        move: (dx, dy) => { data.direction(dx, dy); }
     });
 
     function render() {
         if(data.refresh() === true) {
-            graph.fillRect('#00CED1');
-            data.render(function (koord, r, color, text, settings) {
+            graph.fillRect(FILL_RECT_COLOR);
+            data.render((koord, r, color, text, settings) => {
                 if (!text) {
                     graph.sprite(img, settings, koord, r);
-                    //graph.circle(koord, r, color);
                 } else {
                     graph.circle(koord, r, color);
                     graph.printText(text, koord, r);
@@ -33,23 +33,39 @@
         }
     }
 
-    this.changeNick = function (nickname) {
+    this.changeNick = nickname => {
         data.changeNickname(nickname);
     };
 
-    this.changeColor = function (color) {
-        if (color === 'красный') { color = 'red'; }
-        if (color === 'синий' || color === 'голубой') { color = 'blue'; }
-        if (color === 'желтый') { color = 'yellow'; }
-        if (color === 'зеленый') { color = 'green'; }
+    this.changeColor = color => {
+        color = color.toLowerCase();
+        switch (color) {
+            case 'красный':
+                color = 'red';
+                break;
+            case 'синий':
+                color = 'blue';
+                break;
+            case 'голубой':
+                color = 'lightblue';
+                break;
+            case 'желтый':
+                color = 'yellow';
+                break;
+            case 'зеленый':
+                color = 'green';
+                break;
+        }
         data.changeColor(color);
     };
 
-    this.getScore = function () {
+    this.resetScore = () => { data.resetScore(); };
+
+    this.getScore = () => {
         return data.getScore();
     };
 
-    this.play = function () {
+    this.play = () => {
         return render();
     };
 }
