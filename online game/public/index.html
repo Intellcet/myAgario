@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>myAgario</title>
+
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (!window.JQuery) {
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = 'js/vendor/jquery-3.2.1.min.js';
+            document.getElementsByTagName('head')[0].appendChild(script);
+        }
+    </script>
+    <script type="text/javascript" src="js/vendor/socket.io.js"></script>
+
+    <script type="text/javascript" src="js/main.js"></script>
+</head>
+<body>
+    <main role="main">
+        <section class="infoBlock">
+            <div class="info-elems">
+                <p class="name">myAgario</p>
+                <input type="text" class="nick" placeholder="Введите ник"/> <br />
+                <input type="text" class="color" placeholder="Введите цвет"/> <br />
+                <button class="startBtn">Начать игру!</button>
+            </div>
+        </section>
+        <section class="canvasBlock">
+            <canvas class="canvas"></canvas>
+        </section>
+        <section class="scoreBlock">
+            <p class="score-line">Счёт: <span class="score">0</span></p>
+        </section>
+        <section class="loseBlock">
+            <p class="loseString"></p>
+            <button class="btn-lose agree-btn">Да!</button><button class="btn-lose disagree-btn">Нет!</button>
+        </section>
+    </main>
+
+    <script type="text/javascript" src="js/game/userManager.js"></script>
+    <script type="text/javascript" src="js/game/graph/graph.js"></script>
+    <script type="text/javascript" src="js/game/input.js"></script>
+    <script type="text/javascript" src="js/game/gameManager.js"></script>
+    <script type="text/javascript" src="js/ui.js"></script>
+</body>
+</html>

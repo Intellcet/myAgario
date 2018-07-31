@@ -1,0 +1,98 @@
+﻿html {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    background-image: url(background.png);
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+
+input, span, p, button, section, main, body, html {
+    font-family: "Segoe Print";
+}
+
+main {
+    width: 100%;
+    height: 100%;
+}
+
+section {
+    display: block;
+    float: left;
+}
+
+span {
+    font-weight: lighter;
+    color: white;
+}
+
+p {
+    color: #ffff81;
+}
+
+input {
+    display: block;
+    height: 35px;
+    width: 300px;
+    font-weight: normal;
+    font-size: medium;
+    border: deepskyblue ridge 2px;
+    border-radius: 10px;
+    margin: auto;
+}
+
+.canvasBlock {
+    width: 70%;
+    height: calc(100% - 8px);
+}
+
+.startBtn, .disagree-btn, .agree-btn {
+    display: block;
+    margin: auto;
+    height: 35px;
+    width: 150px;
+    border: deepskyblue ridge 2px;
+    border-radius: 10px;
+    color: white;
+    background-color: #6894ff;
+}
+
+.disagree-btn, .agree-btn {
+    margin-top: 5px;
+    display: inline-block;
+}
+
+.startBtn:hover, .disagree-btn:hover, .agree-btn:hover {
+    background-color: #689fff;
+}
+
+.canvas {
+    border: deepskyblue ridge 4px;
+}
+
+.infoBlock, .loseBlock {
+    height: auto;
+    width: calc(30% - 19px);
+    margin-left: 15px;
+}
+
+.loseBlock {
+    display: none;
+}
+
+.infoBlock {
+    margin-top: 5px;
+}
+
+.info-elems {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+}
+
+
