@@ -3,6 +3,7 @@ const app = express();
 const http = require('http').Server(app);
 const Router = require('./application/router/router');
 const io = require('socket.io')(http);
+const Mediator = require('./application/mediator');
 const GameManager = require('./application/managers/gameManager');
 const UserManager = require('./application/managers/userManager');
 
@@ -19,8 +20,13 @@ const SOCKET_EVENTS = {
     PLAY_AGAIN: 'PLAY AGAIN',
 };
 
-const userManager = new UserManager({ io, SOCKET_EVENTS });
-new GameManager({ io, SOCKET_EVENTS, getUsers: userManager.getUsers });
+const MEDIATOR_EVENTS = {
+    GET_USERS: 'get users',
+};
+
+const mediator = new Mediator({ MEDIATOR_EVENTS });
+new UserManager({ io, SOCKET_EVENTS, MEDIATOR_EVENTS, mediator });
+new GameManager({ io, SOCKET_EVENTS, MEDIATOR_EVENTS, mediator });
 
 http.listen(3000, () => {
     console.log('Server ran on port 3000');

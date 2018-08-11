@@ -9,8 +9,10 @@ function User(id, nick, color, score = 0) {
 
 function UserManager(options) {
     options = (options instanceof Object) ? options : {};
+    const MEDIATOR_EVENTS = options.MEDIATOR_EVENTS;
     const SOCKET_EVENTS = options.SOCKET_EVENTS;
     const io = options.io;
+    const mediator = options.mediator;
 
     const genNick = new GenNick();
     const users = [];
@@ -31,7 +33,10 @@ function UserManager(options) {
 
     });
 
-    this.getUsers = () => { return users; };
+    function init() {
+        mediator.subscribe(MEDIATOR_EVENTS.GET_USERS, () => { return users; });
+    }
+    init();
 }
 
 module.exports = UserManager;

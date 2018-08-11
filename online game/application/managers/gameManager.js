@@ -4,9 +4,10 @@ function GameManager(options) {
 
     options = (options instanceof Object) ? options : {};
 
+    const MEDIATOR_EVENTS = options.MEDIATOR_EVENTS;
     const SOCKET_EVENTS = options.SOCKET_EVENTS;
     const io = options.io;
-    const getUsers = (options.getUsers instanceof Function) ? options.getUsers : () => {};
+    const mediator = options.mediator;
 
     let users;
 
@@ -26,7 +27,7 @@ function GameManager(options) {
         console.log(`User connected into game manager ${socket.id}`);
 
         socket.on(SOCKET_EVENTS.READY, _size => {
-            users = getUsers();
+            users = mediator.call(MEDIATOR_EVENTS.GET_USERS);
             user = users.find(user => { return user.id === socket.id });
             if (user) {
                 size = _size;
@@ -41,7 +42,7 @@ function GameManager(options) {
         });
 
         socket.on(SOCKET_EVENTS.PLAY_AGAIN, () => {
-            users = getUsers();
+            users = mediator.call(MEDIATOR_EVENTS.GET_USERS);
             user = users.find(user => { return user.id === socket.id });
             if (user) {
                 game.start(user, size);
