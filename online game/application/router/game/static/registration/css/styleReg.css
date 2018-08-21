@@ -1,4 +1,4 @@
-﻿html {
+html {
     margin: 0;
     width: 100%;
     height: 100%;
@@ -47,7 +47,12 @@ input {
     margin: auto;
 }
 
-.startBtn {
+.canvasBlock {
+    width: 70%;
+    height: calc(100% - 8px);
+}
+
+.startBtn, .disagree-btn, .agree-btn, .regBtn {
     display: block;
     margin: auto;
     height: 35px;
@@ -58,13 +63,32 @@ input {
     background-color: #6894ff;
 }
 
-.startBtn:hover {
+.disagree-btn, .agree-btn {
+    margin-top: 5px;
+    display: inline-block;
+}
+
+.startBtn:hover, .disagree-btn:hover, .agree-btn:hover, .regBtn:hover {
     background-color: #689fff;
+}
+
+.canvas {
+    border: deepskyblue ridge 4px;
+}
+
+.loseBlock, .scoreBlock {
+    height: auto;
+    width: calc(30% - 19px);
+    margin-left: 15px;
 }
 
 .infoBlock {
     width: 100%;
     height: 100%;
+}
+
+.loseBlock {
+    display: none;
 }
 
 .info-elems {
@@ -79,8 +103,15 @@ input {
     font-size: larger;
 }
 
-.auth {
+.canvasBlock, .scoreBlock, .loseBlock, .auth {
+    display: none;
+}
+
+.auth, .registration {
     width: 330px;
 }
 
+.registration {
+    display: block;
+}
 

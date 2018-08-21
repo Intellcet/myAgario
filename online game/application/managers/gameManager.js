@@ -8,6 +8,7 @@ function GameManager(options) {
     const SOCKET_EVENTS = options.SOCKET_EVENTS;
     const io = options.io;
     const mediator = options.mediator;
+    const db = options.db;
 
     let users;
 
@@ -19,7 +20,7 @@ function GameManager(options) {
         io.to(player.id).emit(SOCKET_EVENTS.GAME_OVER, { answer: 200, data: player.name });
     }
 
-    let game = new Game({ updateScene, gameOver });
+    let game = new Game({ mediator, MEDIATOR_EVENTS, db });
 
     io.on('connection', socket => {
         let user;
@@ -45,9 +46,18 @@ function GameManager(options) {
             users = mediator.call(MEDIATOR_EVENTS.GET_USERS);
             user = users.find(user => { return user.id === socket.id });
             if (user) {
+                user.score = 0;
                 game.start(user, size);
             }
             socket.emit(SOCKET_EVENTS.PLAY_AGAIN, { answer: 200 });
+        });
+
+        socket.on(SOCKET_EVENTS.SHOW_GAME_RECORDS, () => {
+            socket.emit(SOCKET_EVENTS.SHOW_GAME_RECORDS, mediator.call(MEDIATOR_EVENTS.GET_USERS));
+        });
+
+        socket.on(SOCKET_EVENTS.SHOW_GLOBAL_RECORDS, async () => {
+            socket.emit(SOCKET_EVENTS.SHOW_GLOBAL_RECORDS, await db.getRecords());
         });
 
         socket.on('disconnect', () => {
@@ -55,6 +65,13 @@ function GameManager(options) {
         });
 
     });
+
+    function init() {
+        mediator.subscribe(MEDIATOR_EVENTS.UPDATE_SCENE, updateScene);
+        mediator.subscribe(MEDIATOR_EVENTS.GAME_OVER, gameOver);
+    }
+
+    init();
 
 }
 

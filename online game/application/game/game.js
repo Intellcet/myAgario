@@ -4,9 +4,9 @@ const GenerateNicks = require('./generateNicks');
 function Game(options) {
 
     options = (options instanceof Object) ? options : {};
-
-    const updateSceneCallback = (options.updateScene instanceof Function) ? options.updateScene : () => {};
-    const gameOverCallback = (options.gameOver instanceof Function) ? options.gameOver : () => {};
+    const db = options.db;
+    const MEDIATOR_EVENTS = options.MEDIATOR_EVENTS;
+    const mediator = options.mediator;
 
     let interval;
     const Ball = struct.Ball;
@@ -29,7 +29,7 @@ function Game(options) {
             move(player.id);
             eat(player.id);
         }
-        updateSceneCallback(balls);
+        mediator.call(MEDIATOR_EVENTS.UPDATE_SCENE, balls);
     }
 
     function createNewPlayer(user, size) {
@@ -38,10 +38,11 @@ function Game(options) {
             koord.x,
             koord.y,
             0.1,
-            undefined,
+            user.color,
             user.nick || nicks.genNick(),
             user.id
         );
+        player.idDB = user.idDB;
         player.frame.left = player.x - player.frame.width / 2;
         player.frame.bottom = player.y - player.frame.height/ 2;
         player.canvas.width = size.width;
@@ -57,6 +58,7 @@ function Game(options) {
                 }
             }
         }
+        db.updateUser(player.idDB, { nickname: player.name });
         return player;
     }
 
@@ -159,6 +161,8 @@ function Game(options) {
                     const mass = _food.getMass() / player.getMass() * 0.05;
                     player.eat(mass);
                     player.score++;
+                    mediator.call(MEDIATOR_EVENTS.CHANGE_USER_SCORE, player.id);
+                    db.updateUser(player.idDB, true);
                     food.splice(food.indexOf(_food), 1);
                     food.push(new Food(
                         Math.random() * screen.width + screen.left,
@@ -172,7 +176,9 @@ function Game(options) {
                     const mass = ball.getMass() / player.getMass() * 0.05;
                     player.eat(mass);
                     player.score++;
-                    gameOverCallback(ball);
+                    db.updateUser(player.idDB, true);
+                    mediator.call(MEDIATOR_EVENTS.CHANGE_USER_SCORE, player.id);
+                    mediator.call(MEDIATOR_EVENTS.GAME_OVER, ball);
                     balls.splice(balls.indexOf(ball), 1);
                 }
             }

@@ -1,61 +1,47 @@
 ﻿$(() => {
     const $selectors = {
-        nick: $('.nick'),               color: $('.color'),         score: $('.score'),         agree: $('.agree-btn'),       disagree: $('.disagree-btn'),
-        canvasBlock: $('.canvasBlock'), infoBlock: $('.infoBlock'), loseBlock: $('.loseBlock'), scoreBlock: $('.scoreBlock'), loseString: $('.loseString'),
-    };
-    const SOCKET_EVENTS = {
-        LOGIN: 'USER LOGIN',
-        READY: 'USER READY TO PLAY',
-        UPDATE_SCENE: 'UPDATE SCENE',
-        MOVEMENT: 'MOVEMENT OF THE BALL',
-        GAME_OVER: 'GAME IS OVER',
-        PLAY_AGAIN: 'PLAY AGAIN',
+        nick: $('.nick'), login: $('.login'), color: $('.color'), password: $('.password'), startBtn: $('.startBtn'),
     };
 
-    const MEDIATOR_EVENTS = {
-        SHOW_PAGE: 'show page',
-        SET_SCORE: 'set score',
-        EVENTS_UP: 'events up',
-        GET_CANVAS: 'get canvas',
-        FILL_RENDER: 'fill render',
-        FILL_RECT: 'fill rect',
-        CIRCLE: 'print circle',
-        SPRITE: 'print sprite',
-        PRINT_TEXT: 'print text',
-    };
+    const storage = localStorage;
 
-    const mediator = new Mediator({ MEDIATOR_EVENTS });
+    function sendRequest(data) {
+        return new Promise(resolve => {
+            $.ajax({
+                url: 'http://localhost:3000',
+                type: 'POST',
+                dataType: 'json',
+                data,
+                success: data => {
+                    resolve(data);
+                }
+            });
+        });
+    }
 
-    const socket = io('http://localhost:3000');
-
-    function showPage(page) {
-        $selectors.canvasBlock.hide();
-        $selectors.scoreBlock.hide();
-        $selectors.loseBlock.hide();
-        $selectors.infoBlock.hide();
-        switch(page) {
-            case 'info':
-                $selectors.infoBlock.show();
-                break;
-            case 'game':
-                $selectors.canvasBlock.show();
-                $selectors.scoreBlock.show();
-                break;
-            case 'game over':
-                $selectors.canvasBlock.show();
-                $selectors.scoreBlock.show();
-                $selectors.loseBlock.show();
-                break;
+    $selectors.startBtn.on('click', async () => {
+        let nick = null; let color = null; let password = null; let login = null;
+        if ($selectors.password.val() && $selectors.login.val()) {
+            password = $selectors.password.val();
+            login = $selectors.login.val();
+            if ($selectors.nick.val()) { nick = $selectors.nick.val(); }
+            if ($selectors.color.val()) { color = $selectors.color.val(); }
+            password = md5(login + password);
+            const result = await sendRequest({ login, password, nick, color });
+            if (result.code === 200) {
+                storage.setItem('token', result.token);
+                $selectors.password.val(''); $selectors.password.val('');
+                $selectors.nick.val('');     $selectors.color.val('');
+                window.location.href = '/game';
+            } else {
+                console.log(result);
+            }
+        } else {
+            alert('Не введены логин и (или) пароль!');
         }
-    }
 
-    function init() {
-        mediator.subscribe(MEDIATOR_EVENTS.SHOW_PAGE, showPage);
-        new UI({ $selectors, SOCKET_EVENTS, MEDIATOR_EVENTS, socket, mediator });
-        new UserManager({ $selectors, SOCKET_EVENTS, MEDIATOR_EVENTS, socket, mediator });
-        showPage('info');
-    }
-    init();
+    });
+
 
 });
 

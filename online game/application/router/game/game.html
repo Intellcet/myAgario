@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>myAgario</title>
+
+        <meta charset="UTF-8">
+
+        <link rel="stylesheet" href="../game/static/game/css/style.css">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript">
+            if (!window.JQuery) {
+                const script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = '../game/static/game/js/vendor/jquery-3.2.1.min.js';
+                document.getElementsByTagName('head')[0].appendChild(script);
+            }
+        </script>
+        <script type="text/javascript" src="../game/static/game/js/vendor/socket.io.js"></script>
+
+        <script type="text/javascript" src="../game/static/game/js/main.js"></script>
+    </head>
+    <body>
+    <main role="main">
+        <section class="canvasBlock">
+            <canvas class="canvas"></canvas>
+        </section>
+        <section class="gameInfoBlock">
+            <section class="scoreBlock">
+                <p class="score-line">Счёт: <span class="score">0</span><button class="exitBtn">Выйти</button></p>
+            </section>
+            <!--<section class="userBlock">-->
+                <!--<button class="changeBtn">Изменить!</button>-->
+                <!--<input type="text" class="newNick" placeholder="Сменить ник"/>-->
+                <!--<input type="text" class="newColor" placeholder="Сменить цвет"/>-->
+            <!--</section>-->
+            <section class="loseBlock">
+                <p class="loseString"></p>
+                <button class="btn-lose agree-btn">Да!</button><button class="btn-lose disagree-btn">Нет!</button>
+            </section>
+        </section>
+        <section class="recordsBlock">
+            <button class="showRecordsBtn showGameRecordsBtn">Показать рекорды игры</button>
+            <button class="showRecordsBtn showGlobalRecordsBtn">Показать глобальные рекорды</button>
+            <table class="records">
+                <thead>
+                    <th class="posRec">#</th><th class="nickRec">Никнейм</th><th class="record">Рекорд</th>
+                </thead>
+                <tbody class="records-body">
+                    <!--<tr><td class="posRec">99999</td><td class="nickRec">sad</td><td class="record">999996</td></tr>-->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script type="text/javascript" src="../game/static/game/js/mediator.js"></script>
+    <script type="text/javascript" src="../game/static/game/js/game/userManager.js"></script>
+    <script type="text/javascript" src="../game/static/game/js/game/graph/graph.js"></script>
+    <script type="text/javascript" src="../game/static/game/js/game/input.js"></script>
+    <script type="text/javascript" src="../game/static/game/js/game/gameManager.js"></script>
+    <script type="text/javascript" src="../game/static/game/js/ui.js"></script>
+    </body>
+</html>

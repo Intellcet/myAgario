@@ -1,0 +1,149 @@
+﻿html {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    background-image: url(../img/backgr.png);
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+
+input, span, p, a, button, section, main, body, html {
+    font-family: "Segoe Print";
+}
+
+main {
+    width: 100%;
+    height: 100%;
+}
+
+section {
+    display: block;
+    float: left;
+}
+
+span {
+    font-weight: lighter;
+    color: white;
+}
+
+p, a {
+    color: #ffff81;
+    text-decoration-line: none;
+}
+
+input {
+    display: block;
+    height: 35px;
+    width: 300px;
+    font-weight: normal;
+    font-size: medium;
+    border: deepskyblue ridge 2px;
+    border-radius: 10px;
+    margin: auto;
+}
+
+th, td {
+    color: white;
+    border: deepskyblue ridge 4px;
+    border-collapse: collapse;
+}
+
+.canvasBlock {
+    display: block;
+    position: absolute;
+    left: 25%;
+    width: 70%;
+    height: calc(100% - 8px);
+}
+
+.gameInfoBlock, .recordsBlock {
+    display: block;
+    position: absolute;
+    height: 25%;
+    width: 25%;
+    left: 75%;
+    margin: auto;
+}
+
+.recordsBlock {
+    top: 26%;
+    height: calc(100% - 8px);
+}
+
+.records {
+    display: none;
+    margin-top: 5px;
+    border: deepskyblue ridge 4px;
+    border-collapse: collapse;
+}
+
+.posRec, .record{
+    width: 50px;
+}
+
+.nickRec {
+    width: 310px;
+    text-align: center;
+}
+
+.disagree-btn, .agree-btn, .showRecordsBtn {
+    margin: auto;
+    margin-top: 5px;
+    height: 35px;
+    width: 48%;
+    border: deepskyblue ridge 2px;
+    border-radius: 10px;
+    color: white;
+    background-color: #6894ff;
+    display: inline-block;
+}
+
+.startBtn:hover, .disagree-btn:hover, .agree-btn:hover, .regBtn:hover, .showRecordsBtn:hover {
+    background-color: #689fff;
+}
+
+.canvas {
+    border: deepskyblue ridge 4px;
+}
+
+.name {
+    border-bottom: #ffff81 solid 1px;
+    text-align: center;
+    font-size: larger;
+}
+
+.loseBlock {
+    margin-top: 10%;
+    display: none;
+    float: unset;
+}
+
+.score-line {
+    width: 100%;
+}
+
+.scoreBlock {
+    float: unset;
+    width: 100%;
+}
+
+.exitBtn {
+    height: 26px;
+    padding-top: 0;
+    border-top: 1px;
+    margin-right: 15px;
+    float: right;
+    background-color: red;
+    color: white;
+    border-color: red;
+}
+
+.newColor, .newNick {
+    width: 100px;
+}
+
