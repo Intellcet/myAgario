@@ -22,34 +22,47 @@
     </head>
     <body>
     <main role="main">
+        <section class="socialBlock">
+            <p class="playersOnlineStr">Игроки в сети:</p>
+            <section class="playersList">
+                <section class="sliderList">
+                </section>
+            </section>
+            <section class="chat">
+
+            </section>
+        </section>
         <section class="canvasBlock">
             <canvas class="canvas"></canvas>
         </section>
-        <section class="gameInfoBlock">
-            <section class="scoreBlock">
-                <p class="score-line">Счёт: <span class="score">0</span><button class="exitBtn">Выйти</button></p>
-            </section>
-            <!--<section class="userBlock">-->
+        <section class="infoBlock">
+            <section class="gameInfoBlock">
+                <section class="scoreBlock">
+                    <p class="score-line">Счёт: <span class="score">0</span><button class="exitBtn">Выйти</button></p>
+                </section>
+                <!--<section class="userBlock">-->
                 <!--<button class="changeBtn">Изменить!</button>-->
                 <!--<input type="text" class="newNick" placeholder="Сменить ник"/>-->
                 <!--<input type="text" class="newColor" placeholder="Сменить цвет"/>-->
-            <!--</section>-->
-            <section class="loseBlock">
-                <p class="loseString"></p>
-                <button class="btn-lose agree-btn">Да!</button><button class="btn-lose disagree-btn">Нет!</button>
+                <!--</section>-->
+                <section class="loseBlock">
+                    <p class="loseString"></p>
+                    <button class="btn-lose agree-btn">Да!</button><button class="btn-lose disagree-btn">Нет!</button>
+                </section>
             </section>
-        </section>
-        <section class="recordsBlock">
-            <button class="showRecordsBtn showGameRecordsBtn">Показать рекорды игры</button>
-            <button class="showRecordsBtn showGlobalRecordsBtn">Показать глобальные рекорды</button>
-            <table class="records">
-                <thead>
+            <section class="recordsBlock">
+                <div class="btnsBlock">
+                    <button class="showRecordsBtn showGameRecordsBtn">Показать рекорды игры</button>
+                    <button class="showRecordsBtn showGlobalRecordsBtn">Показать глобальные рекорды</button>
+                </div>
+                <table class="records">
+                    <thead>
                     <th class="posRec">#</th><th class="nickRec">Никнейм</th><th class="record">Рекорд</th>
-                </thead>
-                <tbody class="records-body">
-                    <!--<tr><td class="posRec">99999</td><td class="nickRec">sad</td><td class="record">999996</td></tr>-->
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="records-body">
+                    </tbody>
+                </table>
+            </section>
         </section>
     </main>
 

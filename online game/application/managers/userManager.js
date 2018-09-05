@@ -8,6 +8,7 @@ function User(id, idDB, token, nick, color, score = 0) {
     this.nick = nick;
     this.color = color;
     this.score = score;
+    this.party = [];
 }
 
 function UserManager(options) {
@@ -28,16 +29,24 @@ function UserManager(options) {
         }
     }
 
+    function newUserQuit(user) {
+        if (user) {
+            io.local.emit(SOCKET_EVENTS.NEW_USER_QUIT, user.idDB);
+        }
+    }
+
     io.on('connection', socket => {
-        console.log(`User connected into user manager ${socket.id}`);
+        console.log(`User connected to the user manager ${socket.id}`);
 
         socket.on(SOCKET_EVENTS.LOGGED_IN, async token => {
             if (token) {
                 const user = await db.getUserByToken(token);
                 if (user) {
                     user.nickname = (user.nickname) ? user.nickname : genNick.genNick();
-                    users.push(new User(socket.id, user.id, user.token, user.nickname, user.color));
+                    const newUser = new User(socket.id, user.id, user.token, user.nickname, user.color);
+                    users.push(newUser);
                     socket.emit(SOCKET_EVENTS.LOGGED_IN, { answer: 200 });
+                    socket.broadcast.emit(SOCKET_EVENTS.NEW_USER_CAME, newUser);
                     console.log(users);
                 } else {
                     socket.emit(SOCKET_EVENTS.LOGGED_IN, { answer: 100 });
@@ -45,6 +54,10 @@ function UserManager(options) {
             } else {
                 socket.emit(SOCKET_EVENTS.LOGGED_IN, { answer: 0 });
             }
+        });
+
+        socket.on(SOCKET_EVENTS.GET_ONLINE_USERS, () => {
+            socket.emit(SOCKET_EVENTS.GET_ONLINE_USERS, users);
         });
 
         socket.on(SOCKET_EVENTS.DELETE_TOKEN, async token => {
@@ -63,7 +76,10 @@ function UserManager(options) {
 
         socket.on('disconnect', () => {
             const user = users.find(user => { return user.id === socket.id; });
-            users.splice(users.indexOf(user, 1));
+            if (user) {
+                newUserQuit(user);
+                users.splice(users.indexOf(user), 1);
+            }
         });
 
     });

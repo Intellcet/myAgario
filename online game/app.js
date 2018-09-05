@@ -29,6 +29,13 @@ const SOCKET_EVENTS = {
     SHOW_GAME_RECORDS: 'show game records',
     SHOW_GLOBAL_RECORDS: 'show global records',
     DELETE_TOKEN: 'delete token',
+    GET_ONLINE_USERS: 'get online users',
+    NEW_USER_CAME: 'new user came',
+    NEW_USER_QUIT: 'new user quit',
+    SEND_INVITE_TO_PARTY: 'send invite to party',
+    TAKE_INVITE_FOR_PARTY: 'take invite for party',
+    ANSWER_ON_INVITE_TO_PARTY: 'answer on invite to party',
+    TAKE_INVITE_FOR_PARTY_LEADER: 'take invite for party leader',
 };
 
 const MEDIATOR_EVENTS = {

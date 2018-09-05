@@ -1,4 +1,5 @@
 const Game = require('../game/game');
+const PartyManager = require('./partyManager');
 
 function GameManager(options) {
 
@@ -25,7 +26,7 @@ function GameManager(options) {
     io.on('connection', socket => {
         let user;
         let size;
-        console.log(`User connected into game manager ${socket.id}`);
+        console.log(`User connected to the game manager ${socket.id}`);
 
         socket.on(SOCKET_EVENTS.READY, _size => {
             users = mediator.call(MEDIATOR_EVENTS.GET_USERS);
@@ -69,6 +70,7 @@ function GameManager(options) {
     function init() {
         mediator.subscribe(MEDIATOR_EVENTS.UPDATE_SCENE, updateScene);
         mediator.subscribe(MEDIATOR_EVENTS.GAME_OVER, gameOver);
+        new PartyManager(options);
     }
 
     init();

@@ -1,4 +1,37 @@
-﻿function UI(options) {
+﻿function Slider(options) {
+
+    options = (options instanceof Object) ? options : {};
+    const STEP = options.step || 100;
+    const DIRECTION = { UP: 'UP', DOWN: 'DOWN' };
+    const $playersList = $('.playersList');
+
+    let height = $playersList.height();
+    let slider;
+    let defaultOffset; // первоначальный отступ блока
+    let downBorder; // нижняя граница скролла
+    let newDownBorder;
+
+    this.DIRECTION = DIRECTION;
+    this.slide = direction => {
+        slider = (slider) ? slider : $('.sliderList');
+        defaultOffset = (defaultOffset) ? defaultOffset : slider.offset().top;
+        height = (height === $playersList.height()) ? height : $playersList.height();
+        newDownBorder = height - slider.height();
+        downBorder = (downBorder === newDownBorder) ? downBorder : newDownBorder;
+        switch (direction) {
+            case 'UP':
+                let up = Math.round(slider.offset().top - STEP - defaultOffset);
+                slider.css('top', up > downBorder ? up : downBorder + 'px');
+                break;
+            case 'DOWN':
+                let down = Math.round(slider.offset().top + STEP - defaultOffset);
+                slider.css('top', down > 0 ? 0 : down + 'px');
+                break;
+        }
+    };
+}
+
+function UI(options) {
 
     const $selectors = options.$selectors;
     const SOCKET_EVENTS = options.SOCKET_EVENTS;
@@ -7,6 +40,7 @@
     const mediator = options.mediator;
     let interval;
     const TICK = 1000;
+    const slider = new Slider({ step: 10 });
 
     let isShownGame = false;
     let isShownGlobal = false;
@@ -130,6 +164,10 @@
         if (token) {
             socket.emit(SOCKET_EVENTS.DELETE_TOKEN, localStorage.getItem('token'));
         }
+    });
+
+    $selectors.playersList.on('wheel', event => {
+        slider.slide(event.originalEvent.wheelDelta < 0 ? slider.DIRECTION.UP : slider.DIRECTION.DOWN);
     });
 
     socket.on(SOCKET_EVENTS.DELETE_TOKEN, data => {

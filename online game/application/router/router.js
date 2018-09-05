@@ -15,6 +15,11 @@ function Router(options) {
     });
     //TODO:: сделать роутинг для регистрации, игры. Добавить таблицу с рекордами играющих игроков и в целом со всеми игроками.
 
+    router.get('/game?', (req, res) => {
+        console.log(req.query);
+        res.send(req.query);
+    });
+
     router.post('/', async (req, res) => {
         const login = req.body.login;
         let password = req.body.password;
@@ -55,6 +60,10 @@ function Router(options) {
             }
         }
         res.send({error: 'error'});
+    });
+
+    router.all('/*', (req, res) => {
+        res.send('wrong way');
     });
 
     return router;

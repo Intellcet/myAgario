@@ -61,18 +61,93 @@ th, td {
     height: calc(100% - 8px);
 }
 
-.gameInfoBlock, .recordsBlock {
+.infoBlock {
     display: block;
     position: absolute;
-    height: 25%;
-    width: 25%;
-    left: 75%;
+    height: 100%;
+    width: 27%;
+    left: 73%;
     margin: auto;
 }
 
+.socialBlock {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 24%;
+    height: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.playersList {
+    position: relative;
+    width: 100%;
+    height: 50%;
+    overflow: hidden;
+    border-bottom: deepskyblue ridge 1px;
+}
+
+.sliderList {
+    padding: 0;
+    margin: 0;
+    position: relative;
+    width: 100%;
+}
+
+.slider-item {
+    position: relative;
+    height: 40px;
+    border: deepskyblue ridge 1px ;
+    margin: 0;
+    padding-left: 1px;
+    text-overflow: ellipsis;
+}
+
+.nickPlayer {
+    float: left;
+    max-width: 90%;
+    margin: auto;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.inviteToPartyBtn {
+    float: right;
+    margin-top: 2px;
+    border: 0;
+    background-color: green;
+    color: white;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+}
+.inviteToPartyBtn:hover {
+    cursor: pointer;
+}
+.playersOnlineStr {
+    margin: 8px 0 8px 0;
+    text-decoration-line: underline;
+}
+
+.chat {
+    width: 100%;
+    height: 50%;
+}
+
+.btnsBlock {
+    width: 100%;
+    height: 12%;
+}
+
+.gameInfoBlock {
+    height: 30%;
+    width: 100%;
+}
+
 .recordsBlock {
-    top: 26%;
-    height: calc(100% - 8px);
+    height: 70%;
+    width: 100%;
 }
 
 .records {
@@ -94,13 +169,19 @@ th, td {
 .disagree-btn, .agree-btn, .showRecordsBtn {
     margin: auto;
     margin-top: 5px;
-    height: 35px;
     width: 48%;
     border: deepskyblue ridge 2px;
     border-radius: 10px;
     color: white;
     background-color: #6894ff;
     display: inline-block;
+}
+
+.showRecordsBtn {
+    margin: 0;
+    height: 90%;
+    line-height: 1.5;
+    word-spacing: 2pt;
 }
 
 .startBtn:hover, .disagree-btn:hover, .agree-btn:hover, .regBtn:hover, .showRecordsBtn:hover {

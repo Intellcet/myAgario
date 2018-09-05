@@ -38,6 +38,17 @@ function DB(options) {
         });
     };
 
+    this.getUserById = id => {
+        return new Promise(resolve => {
+            if (id) {
+                const query = "SELECT * FROM users WHERE id=?";
+                db.get(query, [id], (err, row) => { resolve((err) ? null : row); })
+            } else {
+                resolve(null);
+            }
+        });
+    };
+
     this.getUserByToken = token => {
       return new Promise(resolve => {
           if (token) {
@@ -98,6 +109,46 @@ function DB(options) {
                         }
                     });
                 }
+            } else {
+                resolve(null);
+            }
+        });
+    };
+
+    this.createParty = leaderId => {
+        return new Promise(resolve => {
+            if (leaderId) {
+                db.serialize(async () => {
+                    const user = await this.getUserById(leaderId);
+                    if (user) {
+                        const query = "INSERT INTO party (id_leader) VALUES (?)";
+                        db.run(query, [leaderId], err => { resolve(!!(err)); });
+                    } else {
+                        resolve(null);
+                    }
+                });
+            } else {
+                resolve(null);
+            }
+        });
+    };
+
+    this.getPartyByIdLeader = leaderId => {
+        return new Promise(resolve => {
+            if (leaderId) {
+                const query = "SELECT * FROM party WHERE id_leader=?";
+                db.get(query, [leaderId], (err, row) => { resolve((err) ? null : row); });
+            } else {
+                resolve(null);
+            }
+        });
+    };
+
+    this.addMemberToParty = (partyId, memberId) => {
+        return new Promise(resolve => {
+            if (partyId && memberId) {
+                const query = "INSERT INTO members (id_party, id_member) VALUES (?, ?)";
+                db.run(query, [partyId, memberId], err => { resolve(!!(err)); });
             } else {
                 resolve(null);
             }

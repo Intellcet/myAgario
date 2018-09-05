@@ -9,7 +9,7 @@
     let memContext = null;
 
     const img = new Image();
-    img.src = "img/food_sample.png";
+    img.src = "../game/static/game/img/food_sample.png";
 
     const koef1 = Math.cos(3 * Math.PI / 4) * 1.2;
     const koef2 = -Math.sin(3 * Math.PI / 4) * 1.45;
