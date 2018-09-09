@@ -1,6 +1,6 @@
 ﻿window.onload = () => {
     if (localStorage.getItem('token')) {
-        window.href = '/game';
+        window.location.href = '/game';
     }
 };
 $(() => {
