@@ -8,7 +8,7 @@ function User(id, idDB, token, nick, color, score = 0) {
     this.nick = nick;
     this.color = color;
     this.score = score;
-    this.party = [];
+    this.party = null;
 }
 
 function UserManager(options) {
@@ -74,10 +74,23 @@ function UserManager(options) {
             }
         });
 
-        socket.on('disconnect', () => {
+        socket.on('disconnect', async () => {
             const user = users.find(user => { return user.id === socket.id; });
             if (user) {
                 newUserQuit(user);
+                const party = await db.getUserParty(user.idDB);
+                const partyId = await db.getPartyId(user.idDB);
+                if (party && partyId) {
+                    for (let player of users) {
+                        if (player.party.find( elem => { return elem.id === user.idDB } )) {
+                            await db.leaveFromParty(partyId.id, player.idDB);
+                            player.party = null;
+                            io.to(player.id).emit(SOCKET_EVENTS.LEADER_LEFT);
+                            io.to(player.id).emit(SOCKET_EVENTS.LEAVE_FROM_PARTY);
+                        }
+                    }
+                    await db.deleteParty(user.idDB);
+                }
                 users.splice(users.indexOf(user), 1);
             }
         });

@@ -12,7 +12,7 @@ body {
     height: 100%;
 }
 
-input, span, p, a, button, section, main, body, html {
+input, textarea, span, p, a, button, section, main, body, html {
     font-family: "Segoe Print";
 }
 
@@ -80,13 +80,75 @@ th, td {
     padding-right: 5px;
 }
 
+.partyList {
+    background-image: url(../img/backgr.png);
+    position: absolute;
+    display: none;
+    top: 44px;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    z-index: 100;
+}
+
+.partyContainer {
+    position: relative;
+    width: 100%;
+    height: 80%;
+    overflow: hidden;
+    border-bottom: deepskyblue ridge 1px;
+}
+
+.sliderPartyList {
+    position: relative;
+    width: 100%;
+}
+
+.startPrivateBtn {
+    position: absolute;
+    bottom: 5%;
+    left: 20%;
+    border: deepskyblue ridge 2px;
+    border-radius: 10px;
+    color: white;
+    background-color: #6894ff;
+}
+
 .playersList {
     position: relative;
     width: 100%;
     height: 50%;
     overflow: hidden;
     border-bottom: deepskyblue ridge 1px;
+    z-index: 0;
 }
+
+.exitFromPartyBtn, .returnBtn {
+    float: right;
+    padding: 0;
+    border: 0;
+    margin-left: 5px;
+}
+
+.exitFromPartyBtn {
+    width: 20px;
+    color: white;
+    background-color: #db0000;;
+}
+
+.exitFromPartyBtn:hover {
+    cursor: pointer;
+    background-color: #ff0000;
+}
+
+.returnBtn {
+    width: 100px;
+    border: deepskyblue ridge 2px;
+    border-radius: 10px;
+    color: white;
+    background-color: #6894ff;
+}
+
 
 .sliderList {
     padding: 0;
@@ -131,8 +193,99 @@ th, td {
 }
 
 .chat {
+    position: relative;
     width: 100%;
     height: 50%;
+}
+
+.notifications {
+    background-color: gray;
+    position: absolute;
+    display: none;
+    top: 13%;
+    left: 0;
+    width: 100%;
+    height: auto;
+    z-index: 100;
+    padding: 0 0 5px 2px;
+}
+
+.notificationBtn {
+    padding: 0;
+    width: 47%;
+    border: deepskyblue ridge 2px;
+    border-radius: 10px;
+    color: white;
+    display: inline-block;
+}
+
+.agreeInviteBtn {
+    background-color: #00db00;
+}
+.agreeInviteBtn:hover {
+    cursor: pointer;
+    background-color: #00ff00;
+}
+.disagreeInviteBtn {
+    background-color: #db0000;
+}
+.disagreeInviteBtn:hover {
+    cursor: pointer;
+    background-color: #ff0000;
+}
+.playersName {
+    color: #ffff81;
+}
+
+.chatWindow {
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    padding-bottom: 50px;
+
+}
+
+.messagesBlock {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 70%;
+    background-color: lightgray;
+    border: deepskyblue ridge 1px ;
+    margin-bottom: 4px;
+}
+
+.messagesList {
+    position: relative;
+    width: 100%;
+}
+
+.messagesList-item {
+    position: relative;
+    height: max-content;
+    margin: 0;
+    padding-left: 1px;
+    word-wrap: break-spaces;
+}
+
+.textMsg {
+    width: 73%;
+    height: 35px;
+    resize: none;
+}
+
+.sendMsgBtn {
+    position: absolute;
+    width: 25%;
+    height: 40px;
+    padding: 0;
+    margin-left: 1%;
+    color: #ffffff;
+    background-color: #6894ff;
+    border: deepskyblue ridge 2px;
+    border-radius: 10px;
+    font-size: 20px;
+    text-align: center;
 }
 
 .btnsBlock {
@@ -167,8 +320,7 @@ th, td {
 }
 
 .disagree-btn, .agree-btn, .showRecordsBtn {
-    margin: auto;
-    margin-top: 5px;
+    margin: 5px auto;
     width: 48%;
     border: deepskyblue ridge 2px;
     border-radius: 10px;
@@ -184,7 +336,8 @@ th, td {
     word-spacing: 2pt;
 }
 
-.startBtn:hover, .disagree-btn:hover, .agree-btn:hover, .regBtn:hover, .showRecordsBtn:hover {
+.startBtn:hover, .disagree-btn:hover, .agree-btn:hover, .regBtn:hover, .showRecordsBtn:hover, .sendMsgBtn:hover, .returnBtn:hover, .startPrivateBtn:hover {
+    cursor: pointer;
     background-color: #689fff;
 }
 
@@ -204,6 +357,10 @@ th, td {
     float: unset;
 }
 
+.loseString {
+    word-wrap: break-spaces;
+}
+
 .score-line {
     width: 100%;
 }
@@ -219,9 +376,15 @@ th, td {
     border-top: 1px;
     margin-right: 15px;
     float: right;
-    background-color: red;
+    background-color: #db0000;
     color: white;
-    border-color: red;
+    border-color: #db0000;
+}
+
+.exitBtn:hover {
+    cursor: pointer;
+    background-color: #ff0000;
+    border-color: #ff0000
 }
 
 .newColor, .newNick {

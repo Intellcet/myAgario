@@ -4,6 +4,7 @@
         <title>myAgario</title>
 
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="stylesheet" href="../game/static/game/css/style.css">
 
@@ -23,13 +24,32 @@
     <body>
     <main role="main">
         <section class="socialBlock">
-            <p class="playersOnlineStr">Игроки в сети:</p>
+            <p class="playersOnlineStr">Игроков в сети:
+            </p>
+            <section class="partyList">
+                <section class="partyContainer">
+                    <section class="sliderPartyList">
+                    </section>
+                </section>
+                <button class="startPrivateBtn">Начать приватную игру!</button>
+            </section>
             <section class="playersList">
                 <section class="sliderList">
                 </section>
             </section>
             <section class="chat">
-
+                <section class="chatWindow">
+                    <section class="messagesBlock">
+                        <section class="messagesList">
+                        </section>
+                    </section>
+                    <textarea class="textMsg" placeholder="Введите текст" autofocus="autofocus"></textarea><button class="sendMsgBtn">✉</button>
+                </section>
+                <section class="notifications">
+                        <p class="notificationStr">Игрок <span class="playersName"></span> пригласил вас в группу</p>
+                        <button class="notificationBtn agreeInviteBtn">Присоединиться</button>
+                        <button class="notificationBtn disagreeInviteBtn">Отказаться</button>
+                </section>
             </section>
         </section>
         <section class="canvasBlock">
@@ -68,6 +88,7 @@
 
     <script type="text/javascript" src="../game/static/game/js/mediator.js"></script>
     <script type="text/javascript" src="../game/static/game/js/game/userManager.js"></script>
+    <script type="text/javascript" src="../game/static/game/js/game/partyManager.js"></script>
     <script type="text/javascript" src="../game/static/game/js/game/graph/graph.js"></script>
     <script type="text/javascript" src="../game/static/game/js/game/input.js"></script>
     <script type="text/javascript" src="../game/static/game/js/game/gameManager.js"></script>

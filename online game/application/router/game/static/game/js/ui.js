@@ -4,27 +4,48 @@
     const STEP = options.step || 100;
     const DIRECTION = { UP: 'UP', DOWN: 'DOWN' };
     const $playersList = $('.playersList');
+    const $messList = $('.messagesBlock');
 
-    let height = $playersList.height();
+    const height = {
+        users: undefined,
+        messages: undefined,
+    };
+    const defaultOffset = { // первоначальный отступ блока
+        users: undefined,
+        messages: undefined,
+    };
     let slider;
-    let defaultOffset; // первоначальный отступ блока
     let downBorder; // нижняя граница скролла
-    let newDownBorder;
 
     this.DIRECTION = DIRECTION;
-    this.slide = direction => {
-        slider = (slider) ? slider : $('.sliderList');
-        defaultOffset = (defaultOffset) ? defaultOffset : slider.offset().top;
-        height = (height === $playersList.height()) ? height : $playersList.height();
-        newDownBorder = height - slider.height();
-        downBorder = (downBorder === newDownBorder) ? downBorder : newDownBorder;
+    this.slide = (direction, section) => {
+        let defOff;
+        if (section === 'users') {
+            slider = $('.sliderList');
+            defaultOffset.users = (defaultOffset.users) ? defaultOffset.users: slider.offset().top;
+            defOff = defaultOffset.users;
+            height.users = $playersList.height();
+            downBorder = height.users - slider.height();
+        } else if(section ==='messages') {
+            slider = $('.messagesList');
+            defaultOffset.messages = (defaultOffset.messages) ? defaultOffset.messages: slider.offset().top;
+            defOff = defaultOffset.messages;
+            height.messages =  $messList.height();
+            downBorder = height.messages - slider.height();
+        } else if (section === 'party') {
+            slider = $('.sliderPartyList');
+            defaultOffset.messages = (defaultOffset.messages) ? defaultOffset.messages: slider.offset().top;
+            defOff = defaultOffset.messages;
+            height.messages =  $messList.height();
+            downBorder = height.messages - slider.height();
+        }
         switch (direction) {
             case 'UP':
-                let up = Math.round(slider.offset().top - STEP - defaultOffset);
+                let up = Math.round(slider.offset().top - STEP - defOff);
                 slider.css('top', up > downBorder ? up : downBorder + 'px');
                 break;
             case 'DOWN':
-                let down = Math.round(slider.offset().top + STEP - defaultOffset);
+                let down = Math.round(slider.offset().top + STEP - defOff);
                 slider.css('top', down > 0 ? 0 : down + 'px');
                 break;
         }
@@ -154,7 +175,6 @@ function UI(options) {
 
     socket.on(SOCKET_EVENTS.SHOW_GLOBAL_RECORDS, players => {
         if (players) {
-            console.log(players);
             fillTable(players);
         }
     });
@@ -167,7 +187,11 @@ function UI(options) {
     });
 
     $selectors.playersList.on('wheel', event => {
-        slider.slide(event.originalEvent.wheelDelta < 0 ? slider.DIRECTION.UP : slider.DIRECTION.DOWN);
+        slider.slide(event.originalEvent.wheelDelta < 0 ? slider.DIRECTION.UP : slider.DIRECTION.DOWN, "users");
+    });
+
+    $selectors.messagesList.on('wheel', event => {
+        slider.slide(event.originalEvent.wheelDelta < 0 ? slider.DIRECTION.UP : slider.DIRECTION.DOWN, 'messages');
     });
 
     socket.on(SOCKET_EVENTS.DELETE_TOKEN, data => {
@@ -183,6 +207,11 @@ function UI(options) {
         mediator.subscribe(MEDIATOR_EVENTS.SET_SCORE, setScore);
         mediator.subscribe(MEDIATOR_EVENTS.SHOW_GAME_RECORDS, showGameRecords);
         mediator.subscribe(MEDIATOR_EVENTS.SHOW_GLOBAL_RECORDS, showGlobalRecords);
+        mediator.subscribe(MEDIATOR_EVENTS.SLIDE_PARTY_ELEMS, () => {
+            $selectors.partyList.on('wheel', event => {
+                slider.slide(event.originalEvent.wheelDelta < 0 ? slider.DIRECTION.UP : slider.DIRECTION.DOWN, 'party');
+            });
+        });
     }
 
     init();

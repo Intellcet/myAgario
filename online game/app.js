@@ -36,6 +36,10 @@ const SOCKET_EVENTS = {
     TAKE_INVITE_FOR_PARTY: 'take invite for party',
     ANSWER_ON_INVITE_TO_PARTY: 'answer on invite to party',
     TAKE_INVITE_FOR_PARTY_LEADER: 'take invite for party leader',
+    LEAVE_FROM_PARTY: 'leave from party',
+    GET_PARTY_USERS: 'get party users',
+    USER_LEFT: 'user left from party',
+    LEADER_LEFT: 'party leader left',
 };
 
 const MEDIATOR_EVENTS = {

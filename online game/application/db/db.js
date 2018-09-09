@@ -122,7 +122,19 @@ function DB(options) {
                     const user = await this.getUserById(leaderId);
                     if (user) {
                         const query = "INSERT INTO party (id_leader) VALUES (?)";
-                        db.run(query, [leaderId], err => { resolve(!!(err)); });
+                        db.run(query, [leaderId], err => {
+                            if (!err) {
+                                const query = "SELECT id FROM party WHERE id_leader=?";
+                                db.get(query, [leaderId], async (err, row) => {
+                                    if (row) {
+                                        resolve(await this.addMemberToParty(row.id, leaderId));
+                                    } else {
+                                        resolve(null);
+                                    }
+                                });
+                            }
+                            resolve(null);
+                        });
                     } else {
                         resolve(null);
                     }
@@ -148,7 +160,118 @@ function DB(options) {
         return new Promise(resolve => {
             if (partyId && memberId) {
                 const query = "INSERT INTO members (id_party, id_member) VALUES (?, ?)";
-                db.run(query, [partyId, memberId], err => { resolve(!!(err)); });
+                db.run(query, [partyId, memberId], err => { resolve(!(err)); });
+            } else {
+                resolve(null);
+            }
+        });
+    };
+
+    this.getPartyId = id => {
+        return new Promise(resolve => {
+           if (id) {
+               const query = "SELECT id_party AS id FROM members WHERE id_member = ?";
+               db.get(query, [id], (err, row) => { resolve((err) ? null : row) });
+           } else {
+               resolve(null);
+           }
+        });
+    };
+
+    this.isPartyLeader =  (idParty, idMember) => {
+        return new Promise(resolve => {
+            if (idParty && idMember) {
+                const query = "SELECT * FROM party WHERE id=? AND id_leader=?";
+                db.get(query, [idParty, idMember], (err, row) => { resolve((err) ? null : row) });
+            } else {
+                resolve(null);
+            }
+        });
+    };
+
+    this.leaveFromParty = (idParty, idMember) => {
+      return new Promise(resolve => {
+          if (idParty && idMember) {
+              const query = "DELETE FROM members WHERE id_party=? AND id_member=?";
+              db.run(query, [idParty, idMember], err => { resolve(!(err)); });
+          } else {
+              resolve(null);
+          }
+      });
+    };
+
+    this.getUserParty = id => {
+        return new Promise(resolve => {
+            db.serialize(() => {
+                if (id) {
+                    const query = "SELECT id_party FROM members WHERE id_member = ?";
+                    db.get(query, [id], (err, row) => {
+                        if (row) {
+                            const query = "SELECT id_member FROM members WHERE id_party = ?";
+                            db.all(query, [row.id_party], (err, row) => {
+                               if (row) {
+                                   let query = "SELECT id, nickname FROM users WHERE";
+                                   const arr = [];
+                                   for (let res of row) {
+                                       query += ' id=? OR';
+                                       arr.push(res.id_member);
+                                   }
+                                   query = query.slice(0, query.length - 3);
+                                   db.all(query, arr, (err, rows) => { resolve((err) ? null : rows); });
+                               } else {
+                                   resolve(null);
+                               }
+                            });
+                        } else {
+                            resolve(null);
+                        }
+                    });
+                } else {
+                    resolve(null);
+                }
+            });
+        });
+    };
+
+    this.simpleDeleteParty = id => {
+        return new Promise(resolve => {
+            if (id) {
+                const query = "DELETE FROM party WHERE id=?";
+                db.run(query, [id], err => { resolve(!err); });
+            } else {
+                resolve(null);
+            }
+        });
+    };
+
+    this.deleteParty = id => {
+        return new Promise(resolve => {
+            if (id) {
+                db.serialize(() => {
+                    const query = "DELETE FROM members WHERE id_member=?";
+                    db.run(query, [id], err => {
+                        if (!err) {
+                            const query = "SELECT id FROM party WHERE id_leader=?";
+                            db.get(query, [id], (err, row) => {
+                                if (row) {
+                                    const query = "DELETE FROM members WHERE id_party=?";
+                                    db.run(query, [row.id], err => {
+                                        if (!err) {
+                                            const query = "DELETE FROM party WHERE id_leader=?";
+                                            db.run(query, [id], err => { resolve(!(err)); });
+                                        } else {
+                                            resolve(null);
+                                        }
+                                    });
+                                } else {
+                                    resolve(null);
+                                }
+                            });
+                        } else {
+                            resolve(null);
+                        }
+                    });
+                });
             } else {
                 resolve(null);
             }
