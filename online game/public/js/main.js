@@ -1,4 +1,9 @@
-﻿$(() => {
+﻿window.onload = () => {
+    if (localStorage.getItem('token')) {
+        window.href = '/game';
+    }
+};
+$(() => {
     const $selectors = {
         nick: $('.nick'), login: $('.login'), color: $('.color'), password: $('.password'), startBtn: $('.startBtn'),
     };
