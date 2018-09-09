@@ -10,13 +10,11 @@
     const mediator = options.mediator;
 
     let player = true;
-    const FILL_RECT_COLOR = '#00CED1';
-
 
     function render(scene) {
         const food = scene.food;
         const balls = scene.balls;
-       mediator.call(MEDIATOR_EVENTS.FILL_RECT, FILL_RECT_COLOR);
+        mediator.call(MEDIATOR_EVENTS.FILL_RECT);
         for (let _food of food) {
             mediator.call(MEDIATOR_EVENTS.SPRITE, { img: _food.img, koord: {x: _food.center.x, y: _food.center.y}, radius: _food.radius });
         }

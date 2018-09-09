@@ -65,6 +65,7 @@ function UI(options) {
 
     let isShownGame = false;
     let isShownGlobal = false;
+    let isSettings = false;
 
     function eventsUp() {
         $selectors.agree.off('click');
@@ -167,6 +168,32 @@ function UI(options) {
         $selectors.recordsBody.append(str);
     }
 
+    function changeHandler() {
+        let btn; let nick; let color;
+        if (!isSettings) {
+            btn = $('.changeBtn');
+            nick = $('.newNick');
+            color = $('.newColor');
+            btn.on('click', () => {
+                const newNick = nick.val();
+                const newColor = color.val();
+                if (newNick || newColor) {
+                    socket.emit(SOCKET_EVENTS.CHANGE_USER, { newNick, newColor });
+                }
+            });
+        } else {
+             $('.newNick').val('');
+             $('.newColor').val('');
+        }
+    }
+
+    socket.on(SOCKET_EVENTS.CHANGE_USER, () => {
+        $selectors.userBlock.hide();
+        isSettings = !isSettings;
+        $('.newNick').val('');
+        $('.newColor').val('');
+    });
+
     socket.on(SOCKET_EVENTS.SHOW_GAME_RECORDS, players => {
         if (players) {
             fillTable(players);
@@ -192,6 +219,17 @@ function UI(options) {
 
     $selectors.messagesList.on('wheel', event => {
         slider.slide(event.originalEvent.wheelDelta < 0 ? slider.DIRECTION.UP : slider.DIRECTION.DOWN, 'messages');
+    });
+
+    $selectors.settingsButton.off('click');
+    $selectors.settingsButton.on('click', () => {
+        if (!isSettings) {
+            $selectors.userBlock.show();
+        } else {
+            $selectors.userBlock.hide();
+        }
+        changeHandler();
+        isSettings = !isSettings
     });
 
     socket.on(SOCKET_EVENTS.DELETE_TOKEN, data => {

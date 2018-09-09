@@ -198,6 +198,16 @@ th, td {
     height: 50%;
 }
 
+.messP {
+    color: #000000;
+    margin: 2px 0 2px 0;
+    padding-left: 5px;
+}
+
+.mess {
+    padding-left: 3px;
+}
+
 .notifications {
     background-color: gray;
     position: absolute;
@@ -336,7 +346,38 @@ th, td {
     word-spacing: 2pt;
 }
 
-.startBtn:hover, .disagree-btn:hover, .agree-btn:hover, .regBtn:hover, .showRecordsBtn:hover, .sendMsgBtn:hover, .returnBtn:hover, .startPrivateBtn:hover {
+.settingsBtn {
+    margin-right: 5px;
+    height: 26px;
+    padding: 0 5px 0 5px;
+    border: deepskyblue ridge 2px;
+    border-radius: 10px;
+    color: white;
+    background-color: #6894ff;
+    float: right;
+}
+
+.changeBtn {
+    margin: 5px auto;
+    height: 26px;
+    width: 100px;
+    padding: 0 5px 0 5px;
+    border: deepskyblue ridge 2px;
+    border-radius: 10px;
+    color: white;
+    background-color: #6894ff;
+    display: block;
+}
+
+.userBlock {
+    background-image: url(../img/backgr.png);
+    display: none;
+    width: 100%;
+    z-index: 100;
+}
+
+.startBtn:hover, .disagree-btn:hover, .agree-btn:hover, .regBtn:hover, .showRecordsBtn:hover,
+.sendMsgBtn:hover, .returnBtn:hover, .startPrivateBtn:hover, .settingsBtn:hover, .changeBtn:hover {
     cursor: pointer;
     background-color: #689fff;
 }
@@ -388,6 +429,13 @@ th, td {
 }
 
 .newColor, .newNick {
-    width: 100px;
+    margin: 5px auto;
 }
 
+.newNick {
+    width: 200px;
+}
+
+.newColor {
+    width: 40px;
+}

@@ -1,5 +1,4 @@
 const Game = require('../game/game');
-const PartyManager = require('./partyManager');
 
 function GameManager(options) {
 
@@ -70,7 +69,6 @@ function GameManager(options) {
     function init() {
         mediator.subscribe(MEDIATOR_EVENTS.UPDATE_SCENE, updateScene);
         mediator.subscribe(MEDIATOR_EVENTS.GAME_OVER, gameOver);
-        new PartyManager(options);
     }
 
     init();

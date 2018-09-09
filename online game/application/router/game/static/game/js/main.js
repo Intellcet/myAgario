@@ -8,10 +8,13 @@ $(() => {
     const storage = localStorage;
 
     const $selectors = {
-        nick: $('.nick'),               color: $('.color'),         score: $('.score'),         agree: $('.agree-btn'),       disagree: $('.disagree-btn'), showGameRecords: $('.showGameRecordsBtn'), showGlobalRecords: $('.showGlobalRecordsBtn'),
-        canvasBlock: $('.canvasBlock'), loseBlock: $('.loseBlock'), scoreBlock: $('.scoreBlock'), loseString: $('.loseString'), records: $('.records'), recordsBody: $('.records-body'), exitBtn: $('.exitBtn'),
-        playersList: $('.playersList'), sliderList: $('.sliderList'), messagesList: $('.messagesBlock'), sliderMessages: $('.messagesList'), party: $('.partyList'), partyList: $('.partyContainer'), sliderParty: $('.sliderPartyList'),
-        playersOnlineStr: $('.playersOnlineStr'), notification: $('.notifications'),
+        nick: $('.nick'), color: $('.color'), score: $('.score'), agree: $('.agree-btn'),
+        disagree: $('.disagree-btn'), showGameRecords: $('.showGameRecordsBtn'), showGlobalRecords: $('.showGlobalRecordsBtn'),
+        canvasBlock: $('.canvasBlock'), loseBlock: $('.loseBlock'), scoreBlock: $('.scoreBlock'), loseString: $('.loseString'),
+        records: $('.records'), recordsBody: $('.records-body'), exitBtn: $('.exitBtn'), playersList: $('.playersList'),
+        sliderList: $('.sliderList'), messagesList: $('.messagesBlock'), sliderMessages: $('.messagesList'), party: $('.partyList'),
+        partyList: $('.partyContainer'), sliderParty: $('.sliderPartyList'), playersOnlineStr: $('.playersOnlineStr'), notification: $('.notifications'),
+        sendMessageBtn: $('.sendMsgBtn'), textMessage: $('.textMsg'), settingsButton: $('.settingsBtn'), userBlock: $('.userBlock'),
     };
     const SOCKET_EVENTS = {
         LOGIN: 'USER LOGIN',
@@ -35,6 +38,9 @@ $(() => {
         GET_PARTY_USERS: 'get party users',
         USER_LEFT: 'user left from party',
         LEADER_LEFT: 'party leader left',
+        SEND_MESSAGE: 'send message',
+        GET_MESSAGE: 'get message',
+        CHANGE_USER: 'change user',
     };
 
     const MEDIATOR_EVENTS = {
@@ -83,6 +89,7 @@ $(() => {
             new UI({ $selectors, SOCKET_EVENTS, MEDIATOR_EVENTS, socket, mediator });
             new UserManager({ $selectors, SOCKET_EVENTS, MEDIATOR_EVENTS, socket, mediator });
             new PartyManager({ $selectors, SOCKET_EVENTS, MEDIATOR_EVENTS, socket, mediator });
+            new chatManager({ $selectors, SOCKET_EVENTS, MEDIATOR_EVENTS, socket, mediator });
         }
     }
     init();

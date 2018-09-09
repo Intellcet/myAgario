@@ -40,6 +40,9 @@ const SOCKET_EVENTS = {
     GET_PARTY_USERS: 'get party users',
     USER_LEFT: 'user left from party',
     LEADER_LEFT: 'party leader left',
+    SEND_MESSAGE: 'send message',
+    GET_MESSAGE: 'get message',
+    CHANGE_USER: 'change user',
 };
 
 const MEDIATOR_EVENTS = {
@@ -47,6 +50,7 @@ const MEDIATOR_EVENTS = {
     UPDATE_SCENE: 'update scene',
     GAME_OVER: 'game over',
     CHANGE_USER_SCORE: 'change user score',
+    UPDATE_PLAYER: "update player's data",
 };
 const mediator = new Mediator({ MEDIATOR_EVENTS });
 new UserManager({ io, SOCKET_EVENTS, MEDIATOR_EVENTS, mediator, db });

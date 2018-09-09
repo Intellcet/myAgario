@@ -10,6 +10,8 @@
 
     const img = new Image();
     img.src = "../game/static/game/img/food_sample.png";
+    const background = new Image();
+    background.src = "../game/static/game/img/field.png";
 
     const koef1 = Math.cos(3 * Math.PI / 4) * 1.2;
     const koef2 = -Math.sin(3 * Math.PI / 4) * 1.45;
@@ -23,9 +25,8 @@
 	    return `${getRadius(r)}px Arial`;
     }
 
-    function fillRect(color) {
-        memContext.fillStyle = color;
-        memContext.fillRect(0, 0, memCanvas.width, memCanvas.height);
+    function fillRect() {
+        memContext.drawImage(background, 0, 0);
     }
 
     function circle(options) {

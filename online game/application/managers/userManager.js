@@ -1,5 +1,6 @@
 const GenNick = require('../game/generateNicks');
-const md5 = require('md5');
+const PartyManager = require('./partyManager');
+const ChatManager = require('./chatManager');
 
 function User(id, idDB, token, nick, color, score = 0) {
     this.id = id;
@@ -74,6 +75,17 @@ function UserManager(options) {
             }
         });
 
+        socket.on(SOCKET_EVENTS.CHANGE_USER, data => {
+            if (data) {
+               const user = users.find(value => { return value.id === socket.id });
+               user.nick = (data.newNick) ? data.newNick : user.nick;
+               user.color = (data.newColor && data.newColor !== '#000000') ? data.newColor : user.color;
+               db.updateUser(user.idDB, { nickname: user.nick, color: user.color });
+               mediator.call(MEDIATOR_EVENTS.UPDATE_PLAYER, { nick: user.nick, color: user.color, id: user.id });
+               io.local.emit(SOCKET_EVENTS.CHANGE_USER);
+            }
+        });
+
         socket.on('disconnect', async () => {
             const user = users.find(user => { return user.id === socket.id; });
             if (user) {
@@ -100,6 +112,8 @@ function UserManager(options) {
     function init() {
         mediator.subscribe(MEDIATOR_EVENTS.GET_USERS, () => { return users; });
         mediator.subscribe(MEDIATOR_EVENTS.CHANGE_USER_SCORE, changeScore);
+        new PartyManager(options);
+        new ChatManager(options);
     }
     init();
 }

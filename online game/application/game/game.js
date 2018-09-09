@@ -32,6 +32,14 @@ function Game(options) {
         mediator.call(MEDIATOR_EVENTS.UPDATE_SCENE, balls);
     }
 
+    function updatePlayer(data) {
+        const player = balls.find(value => { return value.id === data.id; });
+        if (player) {
+            player.name = data.nick;
+            player.color = data.color;
+        }
+    }
+
     function createNewPlayer(user, size) {
         const koord = { x: Math.floor(Math.random() * screen.width + screen.left), y: Math.floor(Math.random() * screen.height + screen.bottom) };
         const player = new Ball(
@@ -197,6 +205,7 @@ function Game(options) {
     function init() {
         pushFood();
         interval = setInterval(updateScene, TICK);
+        mediator.subscribe(MEDIATOR_EVENTS.UPDATE_PLAYER, updatePlayer);
     }
 
     this.direction = (id, x, y) => {//устанавливаем направление движения игрока
