@@ -370,6 +370,7 @@ th, td {
 }
 
 .userBlock {
+    border-radius: 10px;
     background-image: url(../img/backgr.png);
     display: none;
     width: 100%;

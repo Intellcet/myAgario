@@ -233,6 +233,17 @@ function DB(options) {
         });
     };
 
+    this.isUserLeader = id => {
+        return new Promise(resolve => {
+            if (id) {
+                const query = "SELECT id FROM party WHERE id_leader=?";
+                db.get(query, [id], (err, row) => { resolve((err) ? null : !!(row)); });
+            } else {
+                resolve(null);
+            }
+        });
+    };
+
     this.simpleDeleteParty = id => {
         return new Promise(resolve => {
             if (id) {

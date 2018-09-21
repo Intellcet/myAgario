@@ -14,8 +14,8 @@ function PartyManager(options) {
         if (userFrom) {
             const users = mediator.call(MEDIATOR_EVENTS.GET_USERS);
             for (let user of users) {
-                if (user.party.find(elem => { return elem.id === userFrom.idDB; })) {
-                    io.to(user.id).emit(SOCKET_EVENTS.GET_PARTY_USERS, { users: user.party });
+                if (user.party && user.party.find(elem => { return elem.id === userFrom.idDB; })) {
+                    io.to(user.id).emit(SOCKET_EVENTS.GET_PARTY_USERS, { users: userFrom.party });
                 }
             }
         }
@@ -25,11 +25,12 @@ function PartyManager(options) {
         console.log(`User connected to the party manager ${socket.id}`);
         let users;
 
-        socket.on(SOCKET_EVENTS.SEND_INVITE_TO_PARTY, idTO => {
+        socket.on(SOCKET_EVENTS.SEND_INVITE_TO_PARTY, async idTO => {
            users = mediator.call(MEDIATOR_EVENTS.GET_USERS);
            const userFrom = users.find(user => { return user.id === socket.id; });
            const userTo = users.find(user => { return user.idDB === idTO; });
-           if (userTo) {
+           const isUserLeader = await db.isUserLeader(userFrom.idDB);
+           if (userTo && (isUserLeader || !userFrom.party)) {
                if (!userTo.party) {
                    io.to(userTo.id).emit(SOCKET_EVENTS.ANSWER_ON_INVITE_TO_PARTY, { nick: userFrom.nick, id: socket.id });
                    socket.emit(SOCKET_EVENTS.SEND_INVITE_TO_PARTY, { answer: 200 });
@@ -37,7 +38,7 @@ function PartyManager(options) {
                    socket.emit(SOCKET_EVENTS.SEND_INVITE_TO_PARTY, { answer: 100 });
                }
            } else {
-               socket.emit(SOCKET_EVENTS.SEND_INVITE_TO_PARTY, { answer: 0 });
+               socket.emit(SOCKET_EVENTS.SEND_INVITE_TO_PARTY, { answer: (!userTo) ? 0 : 10 });
            }
         });
 
@@ -84,10 +85,11 @@ function PartyManager(options) {
                 const us = users.find(elem => { return elem.token === token; });
                 if (user && us.party) {
                     const partyId = await db.getPartyId(user.id);
-                    if (await !isPartyLeader(partyId.id, user.id)) { // he's not a party leader
+                    const isLeader = await isPartyLeader(partyId.id, user.id);
+                    if (!isLeader) { // he's not a party leader
                         await db.leaveFromParty(partyId.id, us.idDB);
                         for (let player of users) {
-                            if (player.party.find( elem => { return elem.id === user.id } )) {
+                            if (player.party && player.party.find( elem => { return elem.id === user.id } )) {
                                 io.to(player.id).emit(SOCKET_EVENTS.USER_LEFT);
                             }
                         }
@@ -95,7 +97,7 @@ function PartyManager(options) {
                         socket.emit(SOCKET_EVENTS.LEAVE_FROM_PARTY);
                     } else {
                         for (let player of users) {
-                            if (player.party.find( elem => { return elem.id === user.id } )) {
+                            if (player.party && player.party.find( elem => { return elem.id === user.id } )) {
                                 await db.leaveFromParty(partyId.id, player.idDB);
                                 player.party = null;
                                 io.to(player.id).emit(SOCKET_EVENTS.LEADER_LEFT);

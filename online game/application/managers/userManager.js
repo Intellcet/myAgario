@@ -94,7 +94,7 @@ function UserManager(options) {
                 const partyId = await db.getPartyId(user.idDB);
                 if (party && partyId) {
                     for (let player of users) {
-                        if (player.party.find( elem => { return elem.id === user.idDB } )) {
+                        if (player.party && player.party.find( elem => { return elem.id === user.idDB } )) {
                             await db.leaveFromParty(partyId.id, player.idDB);
                             player.party = null;
                             io.to(player.id).emit(SOCKET_EVENTS.LEADER_LEFT);

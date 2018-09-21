@@ -44,8 +44,9 @@ function Router(options) {
                     return res.send({ code: 200, token })
                 }
             }
+            return res.send({error: 'user undefined'});
         }
-        res.send({error: 'error'});
+        res.send({error: 'no login or password inserted'});
     });
 
     router.post('/registration', async (req, res) => {

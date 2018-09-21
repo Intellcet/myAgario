@@ -32,23 +32,31 @@ function PartyManager(options) {
     }
 
     socket.on(SOCKET_EVENTS.SEND_INVITE_TO_PARTY, data => {
-        if (data.answer === 200) {
-            //успешный инвайт
-            $selectors.party.show();
-            console.log('SUCCESS');
-            mediator.call(MEDIATOR_EVENTS.SLIDE_PARTY_ELEMS);
-            mediator.call(MEDIATOR_EVENTS.PARTY_BUTTONS_HANDLER);
-        } else if (data.answer === 100) {
-            $selectors.party.show();
-            $('.sliderPartyList').append('<p class="partyErrMess">Этот игрок уже находится в группе.</p>');
-            setTimeout(() => { $('.partyErrMess').remove(); $selectors.party.hide(); }, 1500);
-        } else { // answer === 0
-            $selectors.party.show();
-            $('.sliderPartyList').append('<p class="partyErrMess">Этот игрок вышел.</p>');
-            setTimeout(() => { $('.partyErrMess').remove(); $selectors.party.hide(); }, 1500);
+        switch (data.answer) {
+            case 200: //успешный инвайт
+                $selectors.party.show();
+                console.log('SUCCESS');
+                mediator.call(MEDIATOR_EVENTS.SLIDE_PARTY_ELEMS);
+                mediator.call(MEDIATOR_EVENTS.PARTY_BUTTONS_HANDLER);
+                break;
+            case 100: //игрок в группе
+                $selectors.party.show();
+                $('.sliderPartyList').append('<p class="partyErrMess">Этот игрок уже находится в группе.</p>');
+                setTimeout(() => { $('.partyErrMess').remove(); $selectors.party.hide(); }, 1500);
+                break;
+            case 10: //находитесь в группе, в которой не являетесь ее лидером
+                $selectors.party.show();
+                $('.sliderPartyList').append('<p class="partyErrMess">Вы находитесь в группе, в которой не являетесь лидером.</p>');
+                setTimeout(() => { $('.partyErrMess').remove(); $selectors.party.hide(); }, 1500);
+                break;
+            case 0: //игрок вышел
+                $selectors.party.show();
+                $('.sliderPartyList').append('<p class="partyErrMess">Этот игрок вышел.</p>');
+                setTimeout(() => { $('.partyErrMess').remove(); $selectors.party.hide(); }, 1500);
+                break;
         }
     });
-    //TODO::  Реализовать логику добавления в группу.
+
     socket.on(SOCKET_EVENTS.ANSWER_ON_INVITE_TO_PARTY, data => {
         //сообщение об инвайте
         if (data.nick) {
