@@ -42,11 +42,15 @@
         switch (direction) {
             case 'UP':
                 let up = Math.round(slider.offset().top - STEP - defOff);
-                slider.css('top', up > downBorder ? up : downBorder + 'px');
+                if (downBorder  > STEP) {
+                    return slider.css('top', "0px");
+                }
+                console.log({defOff, up, downBorder}, (up > downBorder) ? up : downBorder);
+                slider.css('top', ((up > downBorder ) ? up : downBorder) + 'px');
                 break;
             case 'DOWN':
                 let down = Math.round(slider.offset().top + STEP - defOff);
-                slider.css('top', down > 0 ? 0 : down + 'px');
+                slider.css('top', (down > 0 ? 0 : down) + 'px');
                 break;
         }
     };

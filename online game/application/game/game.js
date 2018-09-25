@@ -18,7 +18,7 @@ function Game(options) {
     const balls = [];//массив всех шаров
 
     const FOOD_COUNT = 2500;
-    const TICK = 17;
+    const TICK = 25; //17 = 60fps
 
     const nicks = new GenerateNicks();
 

@@ -9,6 +9,7 @@ const GameManager = require('./application/managers/gameManager');
 const UserManager = require('./application/managers/userManager');
 const SETTINGS = require('./SETTINGS');
 
+
 const db = new DB({ SETTINGS });
 const router = new Router({ db });
 

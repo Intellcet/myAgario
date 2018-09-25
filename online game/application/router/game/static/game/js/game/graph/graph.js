@@ -11,7 +11,9 @@
     const img = new Image();
     img.src = "../game/static/game/img/food_sample.png";
     const background = new Image();
-    background.src = "../game/static/game/img/field.png";
+    background.src = "../game/static/game/img/field.jpg";
+
+    let circleColor = null;
 
     const koef1 = Math.cos(3 * Math.PI / 4) * 1.2;
     const koef2 = -Math.sin(3 * Math.PI / 4) * 1.45;
@@ -33,6 +35,7 @@
         const koord = options.koord;
         const r = options.r;
         const color = options.color;
+        circleColor = color;
         memContext.beginPath();
         memContext.strokeStyle = (color) ? color : 'black';
         memContext.arc(koord.x, koord.y, getRadius(r), 0, 2 * Math.PI, true);
@@ -45,7 +48,7 @@
         const koord = options.koord;
         const r = options.r;
         const text = options.text;
-        memContext.fillStyle = 'white';
+        memContext.fillStyle = (circleColor === 'white' || circleColor === '#ffffff') ? 'black' : 'white';
         memContext.textAlign = 'center';
         memContext.textBaseline = 'center';
         memContext.font = getFont(r / 2);

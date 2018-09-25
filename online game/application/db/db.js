@@ -91,8 +91,10 @@ function DB(options) {
                     let name = [];
                     let val = [];
                     for (let option in options) {
-                        name.push(`${option}=?`);
-                        val.push(options[option]);
+                        if (!!options[option]) {
+                            name.push(`${option}=?`);
+                            val.push(options[option]);
+                        }
                     }
                     val.push(id);
                     const query =`UPDATE users SET ${name.join(', ')} WHERE id=?`;

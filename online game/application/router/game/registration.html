@@ -6,10 +6,11 @@
         <meta charset="UTF-8">
 
         <link rel="stylesheet" href="../game/static/registration/css/styleReg.css">
+        <link rel="shortcut icon" href="../game/static/registration/img/favicon.png" type="image/x-icon">
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script type="text/javascript">
-            if (!window.JQuery) {
+            if (!window.jQuery) {
                 const script = document.createElement('script');
                 script.type = 'text/javascript';
                 script.src = '../game/static/registration/js/vendor/jquery-3.2.1.min.js';
@@ -26,13 +27,16 @@
                 <div class="info-elems">
                     <p class="name">myAgario</p>
                     <div class="registration">
-                        <input type="text" class="login" placeholder="Введите логин"/> <br />
                         <input type="text" class="nick" placeholder="Введите ник"/> <br />
+                        <input type="text" class="login" placeholder="Введите логин"/> <br />
                         <input type="password" class="password" placeholder="Введите пароль"/> <br />
                         <input type="password" class="password" placeholder="Повторите пароль"/> <br />
                         <button class="regBtn">Зарегистрироваться!</button>
                         <a href='/' class="backToAuth">Назад</a>
                     </div>
+                </div>
+                <div class="error-block">
+                    <p class="err-elem"></p>
                 </div>
             </section>
         </main>

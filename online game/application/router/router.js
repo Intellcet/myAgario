@@ -13,7 +13,6 @@ function Router(options) {
     router.get('/game', (req, res) => {
         res.sendFile(`${__dirname}/game/game.html`);
     });
-    //TODO:: сделать роутинг для регистрации, игры. Добавить таблицу с рекордами играющих игроков и в целом со всеми игроками.
 
     router.get('/game?', (req, res) => {
         console.log(req.query);
@@ -32,35 +31,28 @@ function Router(options) {
                 const token = md5(login + password);
                 const result = await db.updateToken(user.id, token);
                 if (result) {
-                    if (!user.nickname && !nickname) {
-                        await db.updateUser(user.id, { nickname, color });
-                    } else if (user.nickname && nickname){
-                        await db.updateUser(user.id, { nickname, color });
-                    } else if (!user.nickname && nickname){
-                        await db.updateUser(user.id, { nickname, color });
-                    } else {
-                        await db.updateUser(user.id, { color });
-                    }
+                    await db.updateUser(user.id, { nickname, color });
                     return res.send({ code: 200, token })
                 }
             }
-            return res.send({error: 'user undefined'});
+            return res.send({ error: 'Пользователь с такими данными не найден.' });
         }
-        res.send({error: 'no login or password inserted'});
+        res.send({error: 'Не введены логин или пароль.'});
     });
 
     router.post('/registration', async (req, res) => {
         const login = req.body.login;
         let password = req.body.password;
         const nickname = req.body.nick;
-        if (login && password && nickname) {
+        if (login && password) {
             password = md5(login + password);
-            const result = await db.setUser(login, password, nickname);
+            const result = await db.setUser(login, password, nickname ? nickname : "");
             if (result) {
                 return res.send({ code: 200 })
             }
+            return res.send({ error: "Пользователь с таким логином уже существует." });
         }
-        res.send({error: 'error'});
+        res.send({ error: "Ввели недостаточно данных." });
     });
 
     router.all('/*', (req, res) => {
