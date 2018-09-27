@@ -1,7 +1,8 @@
 ﻿window.onload = () => {
-  if (!localStorage.getItem('token')) {
+
+    if (!localStorage.getItem('token')) {
       window.location.href = '/';
-  }
+    }
 };
 $(() => {
 
@@ -15,6 +16,7 @@ $(() => {
         sliderList: $('.sliderList'), messagesList: $('.messagesBlock'), sliderMessages: $('.messagesList'), party: $('.partyList'),
         partyList: $('.partyContainer'), sliderParty: $('.sliderPartyList'), playersOnlineStr: $('.playersOnlineStr'), notification: $('.notifications'),
         sendMessageBtn: $('.sendMsgBtn'), textMessage: $('.textMsg'), settingsButton: $('.settingsBtn'), userBlock: $('.userBlock'),
+        chats: $('.nav-chats-elem'), commonChat: $('.common'), partyChat: $('.group'),
     };
     const SOCKET_EVENTS = {
         LOGIN: 'USER LOGIN',
@@ -35,12 +37,14 @@ $(() => {
         ANSWER_ON_INVITE_TO_PARTY: 'answer on invite to party',
         TAKE_INVITE_FOR_PARTY_LEADER: 'take invite for party leader',
         LEAVE_FROM_PARTY: 'leave from party',
+        CANCELED_PARTY: 'canceled party',
         GET_PARTY_USERS: 'get party users',
         USER_LEFT: 'user left from party',
         LEADER_LEFT: 'party leader left',
         SEND_MESSAGE: 'send message',
         GET_MESSAGE: 'get message',
         CHANGE_USER: 'change user',
+        CHANGE_CHAT: 'change chat',
     };
 
     const MEDIATOR_EVENTS = {
@@ -79,8 +83,6 @@ $(() => {
         }
     }
 
-    //TODO::Сделать онлайн изменение рекордов(глобально) и в рамках играющих игроков
-
     function init() {
         const token = storage.getItem('token');
         if (token) {
@@ -89,7 +91,7 @@ $(() => {
             new UI({ $selectors, SOCKET_EVENTS, MEDIATOR_EVENTS, socket, mediator });
             new UserManager({ $selectors, SOCKET_EVENTS, MEDIATOR_EVENTS, socket, mediator });
             new PartyManager({ $selectors, SOCKET_EVENTS, MEDIATOR_EVENTS, socket, mediator });
-            new chatManager({ $selectors, SOCKET_EVENTS, MEDIATOR_EVENTS, socket, mediator });
+            new ChatManager({ $selectors, SOCKET_EVENTS, MEDIATOR_EVENTS, socket, mediator });
         }
     }
     init();

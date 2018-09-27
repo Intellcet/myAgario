@@ -16,37 +16,39 @@
     };
     let slider;
     let downBorder; // нижняя граница скролла
+    let workingHeight = null; //текущая выоста родителя
 
     this.DIRECTION = DIRECTION;
     this.slide = (direction, section) => {
-        let defOff;
+        let defOff = 0;
         if (section === 'users') {
             slider = $('.sliderList');
             defaultOffset.users = (defaultOffset.users) ? defaultOffset.users: slider.offset().top;
             defOff = defaultOffset.users;
             height.users = $playersList.height();
             downBorder = height.users - slider.height();
+            workingHeight = $playersList.height();
         } else if(section ==='messages') {
             slider = $('.messagesList');
             defaultOffset.messages = (defaultOffset.messages) ? defaultOffset.messages: slider.offset().top;
             defOff = defaultOffset.messages;
             height.messages =  $messList.height();
             downBorder = height.messages - slider.height();
+            workingHeight = $messList.height();
         } else if (section === 'party') {
             slider = $('.sliderPartyList');
             defaultOffset.messages = (defaultOffset.messages) ? defaultOffset.messages: slider.offset().top;
             defOff = defaultOffset.messages;
             height.messages =  $messList.height();
             downBorder = height.messages - slider.height();
+            workingHeight = $messList.height();
         }
         switch (direction) {
             case 'UP':
                 let up = Math.round(slider.offset().top - STEP - defOff);
-                if (downBorder  > STEP) {
-                    return slider.css('top', "0px");
+                if (workingHeight < slider.height()) {
+                    slider.css('top', ((up > downBorder ) ? up : downBorder) + 'px');
                 }
-                console.log({defOff, up, downBorder}, (up > downBorder) ? up : downBorder);
-                slider.css('top', ((up > downBorder ) ? up : downBorder) + 'px');
                 break;
             case 'DOWN':
                 let down = Math.round(slider.offset().top + STEP - defOff);
@@ -225,8 +227,12 @@ function UI(options) {
         slider.slide(event.originalEvent.wheelDelta < 0 ? slider.DIRECTION.UP : slider.DIRECTION.DOWN, 'messages');
     });
 
-    $selectors.settingsButton.off('click');
-    $selectors.settingsButton.on('click', () => {
+    $selectors.chats.off('click').on('click', function () {
+        $selectors.chats.removeClass('selected-chat');
+        $(this).addClass('selected-chat');
+    });
+
+    $selectors.settingsButton.off('click').on('click', () => {
         if (!isSettings) {
             $selectors.userBlock.show();
         } else {

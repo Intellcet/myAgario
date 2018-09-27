@@ -19,13 +19,11 @@ function UserManager(options) {
     function buttonsHandlerUp() {
         inParty = !inParty;
         $selectors.playersOnlineStr.empty();
-        $selectors.playersOnlineStr.append('Игроков в сети: <button class="exitFromPartyBtn">х</button>'+
+        $selectors.playersOnlineStr.append('Игроков в группе: <button class="exitFromPartyBtn">х</button>'+
             '<button class="returnBtn">Назад</button>');
         const $returnBtn = $('.returnBtn');
         const $exitFromPartyBtn = $('.exitFromPartyBtn');
-        $returnBtn.off('click');
-        $exitFromPartyBtn.off('click');
-        $returnBtn.on('click', () => {
+        $returnBtn.off('click').on('click', () => {
             if (inParty) {
                 $selectors.party.hide();
             } else {
@@ -33,10 +31,10 @@ function UserManager(options) {
             }
             inParty = !inParty;
         });
-        $exitFromPartyBtn.on('click', () => {
+        $exitFromPartyBtn.off('click').on('click', () => {
             $returnBtn.off('click');
             $exitFromPartyBtn.off();
-            $selectors.party.show();
+            $selectors.party.hide();
             inParty = false;
             $selectors.playersOnlineStr.empty();
             $selectors.playersOnlineStr.append('Игроков в сети: ');

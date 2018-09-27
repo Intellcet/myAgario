@@ -92,16 +92,27 @@ function UserManager(options) {
                 newUserQuit(user);
                 const party = await db.getUserParty(user.idDB);
                 const partyId = await db.getPartyId(user.idDB);
+                const isPartyLeader = await db.isPartyLeader(user.idDB);
                 if (party && partyId) {
-                    for (let player of users) {
-                        if (player.party && player.party.find( elem => { return elem.id === user.idDB } )) {
-                            await db.leaveFromParty(partyId.id, player.idDB);
-                            player.party = null;
-                            io.to(player.id).emit(SOCKET_EVENTS.LEADER_LEFT);
-                            io.to(player.id).emit(SOCKET_EVENTS.LEAVE_FROM_PARTY);
+                    if (isPartyLeader) {
+                        for (let player of users) {
+                            if (player.party && player.party.find( elem => { return elem.id === user.idDB } )) {
+                                await db.leaveFromParty(partyId.id, player.idDB);
+                                player.party = null;
+                                io.to(player.id).emit(SOCKET_EVENTS.LEADER_LEFT);
+                                io.to(player.id).emit(SOCKET_EVENTS.LEAVE_FROM_PARTY);
+                            }
+                        }
+                        await db.deleteParty(user.idDB);
+                    } else {
+                        await db.leaveFromParty(partyId.id, user.idDB);
+                        for (let player of users) {
+                            if (player.party && player.party.find( elem => { return elem.id === user.idDB } )) {
+                                player.party.splice(users.indexOf(user), 1);
+                                io.to(player.id).emit(SOCKET_EVENTS.USER_LEFT);
+                            }
                         }
                     }
-                    await db.deleteParty(user.idDB);
                 }
                 users.splice(users.indexOf(user), 1);
             }

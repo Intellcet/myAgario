@@ -31,13 +31,22 @@ function PartyManager(options) {
         }
     }
 
+    function showWait() {
+        const svg = `<svg class="waiting" height="100px" width="200px">
+                                <circle id="circle-1" cx="30" cy="50" r="20" stroke="#00dd00" stroke-width="1" fill="#00dd00"></circle>
+                                <circle id="circle-2" cx="80" cy="50" r="20" stroke="#00dd00" stroke-width="1" fill="#00dd00"></circle>
+                                <circle id="circle-3" cx="130" cy="50" r="20" stroke="#00dd00" stroke-width="1" fill="#00dd00"></circle>
+                            </svg>`;
+        $selectors.commonChat.removeClass("selected-chat");
+        $selectors.partyChat.removeClass("selected-chat").addClass("selected-chat");
+        $selectors.sliderMessages.empty().append(svg);
+    }
+
     socket.on(SOCKET_EVENTS.SEND_INVITE_TO_PARTY, data => {
         switch (data.answer) {
             case 200: //успешный инвайт
-                $selectors.party.show();
+                showWait();
                 console.log('SUCCESS');
-                mediator.call(MEDIATOR_EVENTS.SLIDE_PARTY_ELEMS);
-                mediator.call(MEDIATOR_EVENTS.PARTY_BUTTONS_HANDLER);
                 break;
             case 100: //игрок в группе
                 $selectors.party.show();
@@ -74,6 +83,9 @@ function PartyManager(options) {
         } else {
             $selectors.party.show();
             console.log('SUCCESS');
+            $selectors.sliderMessages.empty();
+            $selectors.commonChat.removeClass("selected-chat");
+            $selectors.partyChat.removeClass("selected-chat").addClass("selected-chat");
             mediator.call(MEDIATOR_EVENTS.SLIDE_PARTY_ELEMS);
             mediator.call(MEDIATOR_EVENTS.PARTY_BUTTONS_HANDLER);
             socket.emit(SOCKET_EVENTS.GET_PARTY_USERS, token);
@@ -84,6 +96,11 @@ function PartyManager(options) {
         if (data.answer === 200) {
             //успешный инвайт
             $selectors.party.show();
+            $selectors.sliderMessages.empty();
+            $selectors.commonChat.removeClass("selected-chat");
+            $selectors.partyChat.removeClass("selected-chat").addClass("selected-chat");
+            mediator.call(MEDIATOR_EVENTS.SLIDE_PARTY_ELEMS);
+            mediator.call(MEDIATOR_EVENTS.PARTY_BUTTONS_HANDLER);
             socket.emit(SOCKET_EVENTS.GET_PARTY_USERS, token);
         } else if (data.answer === 100) {
             $selectors.party.show();
@@ -109,6 +126,9 @@ function PartyManager(options) {
 
     socket.on(SOCKET_EVENTS.LEAVE_FROM_PARTY, () => {
         $('.sliderPartyList').empty();
+        $selectors.partyChat.removeClass("selected-chat");
+        $selectors.commonChat.removeClass("selected-chat").addClass("selected-chat");
+        $selectors.sliderMessages.empty();
         $selectors.party.hide();
     });
 
@@ -118,6 +138,9 @@ function PartyManager(options) {
 
     socket.on(SOCKET_EVENTS.LEADER_LEFT, () => {
         socket.emit(SOCKET_EVENTS.GET_PARTY_USERS, token);
+        $selectors.partyChat.removeClass("selected-chat");
+        $selectors.commonChat.removeClass("selected-chat").addClass("selected-chat");
+        $selectors.sliderMessages.empty();
         $selectors.playersOnlineStr.empty();
         $selectors.playersOnlineStr.append('Игроков в сети: ');
     });

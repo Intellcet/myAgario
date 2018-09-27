@@ -38,12 +38,14 @@ const SOCKET_EVENTS = {
     ANSWER_ON_INVITE_TO_PARTY: 'answer on invite to party',
     TAKE_INVITE_FOR_PARTY_LEADER: 'take invite for party leader',
     LEAVE_FROM_PARTY: 'leave from party',
+    CANCELED_PARTY: 'canceled party',
     GET_PARTY_USERS: 'get party users',
     USER_LEFT: 'user left from party',
     LEADER_LEFT: 'party leader left',
     SEND_MESSAGE: 'send message',
     GET_MESSAGE: 'get message',
     CHANGE_USER: 'change user',
+    CHANGE_CHAT: 'change chat',
 };
 
 const MEDIATOR_EVENTS = {
