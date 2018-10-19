@@ -90,7 +90,7 @@ $(() => {
             const socket = io('http://localhost:3000');
             new UI({ $selectors, SOCKET_EVENTS, MEDIATOR_EVENTS, socket, mediator });
             new UserManager({ $selectors, SOCKET_EVENTS, MEDIATOR_EVENTS, socket, mediator });
-            new PartyManager({ $selectors, SOCKET_EVENTS, MEDIATOR_EVENTS, socket, mediator });
+            //new PartyManager({ $selectors, SOCKET_EVENTS, MEDIATOR_EVENTS, socket, mediator });
             new ChatManager({ $selectors, SOCKET_EVENTS, MEDIATOR_EVENTS, socket, mediator });
         }
     }

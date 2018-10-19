@@ -14,10 +14,11 @@ function UserManager(options) {
     let height;
 
     const token = storage.getItem('token');
+    let onlineUsers = [];
 
     //leave party button and back to online players list button
     function buttonsHandlerUp() {
-        inParty = !inParty;
+        /*inParty = !inParty;
         $selectors.playersOnlineStr.empty();
         $selectors.playersOnlineStr.append('Игроков в группе: <button class="exitFromPartyBtn">х</button>'+
             '<button class="returnBtn">Назад</button>');
@@ -39,7 +40,7 @@ function UserManager(options) {
             $selectors.playersOnlineStr.empty();
             $selectors.playersOnlineStr.append('Игроков в сети: ');
             socket.emit(SOCKET_EVENTS.LEAVE_FROM_PARTY, token);
-        });
+        });*/
     }
 
     function inviteToPartyHandler() {
@@ -68,11 +69,14 @@ function UserManager(options) {
 
     socket.on(SOCKET_EVENTS.GET_ONLINE_USERS, users => {
         $selectors.sliderList.empty();
+        if (users.length !== 0) {
+            onlineUsers = users;
+        }
         for (let user of users) {
             if (user.token !== token) {
                 $selectors.sliderList.append(`<div class="slider-item playersList-elem">
                     <p class="nickPlayer">${user.nick}</p>
-                    <button class="inviteToPartyBtn" title="Пригласить в группу" data-val=${user.idDB}>+</button>
+                    <!--<button class="inviteToPartyBtn" title="Пригласить в группу" data-val=${user.idDB}>+</button>-->
                 </div>`);
             } else {
                 $selectors.sliderList.append(`<div class="slider-item playersList-elem">
@@ -80,20 +84,20 @@ function UserManager(options) {
                  </div>`);
             }
         }
-        inviteToPartyHandler();
+        //inviteToPartyHandler();
     });
 
     socket.on(SOCKET_EVENTS.NEW_USER_CAME, user => {
-        if (user.token !== token) {
+        if (user.token !== token && !(onlineUsers.find(user => { return user.token === user.token; }))) {
             $selectors.sliderList.append(`<div class="slider-item playersList-elem">
                         <p class="nickPlayer">${user.nick}</p>
-                        <button class="inviteToPartyBtn" title="Пригласить в группу" data-val=${user.idDB}>+</button>
+                        <!--<button class="inviteToPartyBtn" title="Пригласить в группу" data-val=${user.idDB}>+</button>-->
                     </div>`);
-            inviteToPartyHandler();
+            //inviteToPartyHandler();
         }
     });
 
-    socket.on(SOCKET_EVENTS.NEW_USER_QUIT, id => {
+    /*socket.on(SOCKET_EVENTS.NEW_USER_QUIT, id => {
        const buttons = $('.inviteToPartyBtn');
        for (let button of buttons) {
            let btn = $(button);
@@ -101,7 +105,7 @@ function UserManager(options) {
                $(btn.parent()).remove();
            }
        }
-    });
+    });*/
 
     socket.on(SOCKET_EVENTS.LOGGED_IN, data => {
         if (data.answer === 200) {

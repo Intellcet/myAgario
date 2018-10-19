@@ -25,11 +25,11 @@ function ChatManager(options) {
                        $selectors.sliderMessages.append(`<div class="mess"><strong>${data.nickname}: </strong><p class="messP">${data.message}</p></div>`);
                    }
                break;
-               case "party":
+               /*case "party":
                    if ($selectors.partyChat.hasClass("selected-chat")) {
                        $selectors.sliderMessages.append(`<div class="mess"><strong>${data.nickname}: </strong><p class="messP party-mess">${data.message}</p></div>`);
                    }
-               break;
+               break;*/
            }
        }
     });
