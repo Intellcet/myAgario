@@ -37,8 +37,6 @@ function UserManager(options) {
     }
 
     io.on('connection', socket => {
-        console.log(`User connected to the user manager ${socket.id}`);
-
         socket.on(SOCKET_EVENTS.LOGGED_IN, async token => {
             if (token) {
                 const user = await db.getUserByToken(token);

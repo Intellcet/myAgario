@@ -25,7 +25,6 @@ function GameManager(options) {
     io.on('connection', socket => {
         let user;
         let size;
-        console.log(`User connected to the game manager ${socket.id}`);
 
         socket.on(SOCKET_EVENTS.READY, _size => {
             users = mediator.call(MEDIATOR_EVENTS.GET_USERS);
