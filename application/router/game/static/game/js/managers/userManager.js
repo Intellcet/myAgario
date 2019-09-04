@@ -74,12 +74,12 @@ function UserManager(options) {
         }
         for (let user of users) {
             if (user.token !== token) {
-                $selectors.sliderList.append(`<div class="slider-item playersList-elem">
+                $selectors.sliderList.append(`<div class="slider-item playersList-elem" data-val=${user.idDB}>
                     <p class="nickPlayer">${user.nick}</p>
                     <!--<button class="inviteToPartyBtn" title="Пригласить в группу" data-val=${user.idDB}>+</button>-->
                 </div>`);
             } else {
-                $selectors.sliderList.append(`<div class="slider-item playersList-elem">
+                $selectors.sliderList.append(`<div class="slider-item playersList-elem" data-val=${user.idDB}>
                      <p class="nickPlayer">${user.nick}</p>
                  </div>`);
             }
@@ -88,8 +88,8 @@ function UserManager(options) {
     });
 
     socket.on(SOCKET_EVENTS.NEW_USER_CAME, user => {
-        if (user.token !== token && !(onlineUsers.find(user => { return user.token === user.token; }))) {
-            $selectors.sliderList.append(`<div class="slider-item playersList-elem">
+        if (user.token !== token && !(onlineUsers.find(onlineUser => onlineUser.token === user.token))) {
+            $selectors.sliderList.append(`<div class="slider-item playersList-elem" data-val=${user.idDB}>
                         <p class="nickPlayer">${user.nick}</p>
                         <!--<button class="inviteToPartyBtn" title="Пригласить в группу" data-val=${user.idDB}>+</button>-->
                     </div>`);
@@ -97,15 +97,27 @@ function UserManager(options) {
         }
     });
 
-    /*socket.on(SOCKET_EVENTS.NEW_USER_QUIT, id => {
-       const buttons = $('.inviteToPartyBtn');
-       for (let button of buttons) {
-           let btn = $(button);
-           if (btn.data('val') === id) {
-               $(btn.parent()).remove();
+    socket.on(SOCKET_EVENTS.NEW_USER_QUIT, id => {
+       const playersListElems = $('.playersList-elem');
+       for (let playersElem of playersListElems) {
+           const player = $(playersElem);
+           if (player.data('val') === id) {
+               $(player).remove();
            }
        }
-    });*/
+        // commented while no parties
+        // const buttons = $('.inviteToPartyBtn');
+        // for (let button of buttons) {
+        //     let btn = $(button);
+        //     if (btn.data('val') === id) {
+        //         $(btn.parent()).remove();
+        //     }
+        // }
+        const player = onlineUsers.find(user => user.idDB === id);
+       if (player) {
+           onlineUsers.splice(onlineUsers.indexOf(player), 1);
+       }
+    });
 
     socket.on(SOCKET_EVENTS.LOGGED_IN, data => {
         if (data.answer === 200) {

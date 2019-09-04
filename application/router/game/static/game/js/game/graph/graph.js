@@ -28,7 +28,7 @@
     }
 
     function fillRect() {
-        memContext.drawImage(background, 0, 0);
+        memContext.drawImage(background, 0, 0, options.width, options.height);
     }
 
     function circle(options) {

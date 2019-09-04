@@ -11,6 +11,7 @@ html {
 
 body {
     background: url(../img/backgr.jpg) no-repeat center;
+    background-size: cover;
     box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.58) inset;
     margin: 0;
     width: 100%;
